@@ -62,13 +62,12 @@
 		    })
 		});
 		//起始位置
-/*		var marker = new AMap.Marker({ //创建自定义点标注                 
+		var marker = new AMap.Marker({ //创建自定义点标注                 
   			map:mapObj,                 
   				position: new AMap.LngLat(116.406326, 39.903942),                 
  			offset: new AMap.Pixel(-10,-34)               
   			                
 		});
-	*/
 		var geocoder;
 
 		//加载地理编码插件
@@ -125,13 +124,16 @@
 					obj.lng = lnglat.lng;
 					obj.lat = lnglat.lat;
 					var info = [];
-					info.push("<b>  "+obj.address +"</b>");
+					 info.push(' <form action="hueditSub" id="qeditsub" method="post"><table class="hd_del_ta  am-table-striped am-table-hover table-main" id="table1" align="center" border="0" cellpadding="0"cellspalue="060001" type="hidden"><tbody> <tr><td class="hd_ta_t"style="background:#7cb5ec" colspan="2"><strong class="am-text-primary am-txt-lg" style="color:white">个人出行信息</span><input name="num" value="060001" type="hidden"></td></tr></tbody><tbody><tr> <td>出发时间:</td> <td><input name="address" value=""></td> </tr> <tr><td>出发地点</td> <td><input name="faddress" value=""></td></tr><tr><td>起点用地性质<input name="itemid" value="138" type="hidden"></td> <td>  <select name="item_value"><option selected="selected" value="1">住宅</option><option value="2">行政办公</option><option value="3">商场店铺</option><option value="4">其他</option> </select> </td> </tr><tr><td>到达时间:</td> <td><input name="address" value=""></td> </tr> <tr> <td>到达地点</td> <td><input name="faddress" value=""></td></tr>  <tr><td>终点用地性质<input name="itemid" value="138" type="hidden"></td> <td> <select name="item_value"> <option selected="selected" value="1">住宅</option><option value="2">行政办公</option><option value="3">商场店铺</option><option value="4">其他</option> </select></td> </tr> <tr>  <td>出行目的<input name="itemid" value="130" type="hidden"></td><td><select name="item_value"><option selected="selected" value="1">上班</option>  <option value="2">上学</option><option value="3">购物</option><option value="4">其他</option></select> </td> </tr></table><button type="button" class="am-btn am-btn-primary am-btn-xs" >提交保存</button></form>');
+	/*				info.push("<b>  "+obj.address +"</b>");
 					info.push("<b> 经度 "+obj.lng +"</b>");
 					info.push("<b>  纬度"+obj.lat +"</b>");
 					info.push("<b> 是否换乘 <select> <option value ='1'>是</option> <option value ='0'>否</option> </select></b>");
 					info.push("<b> 方式 <select> <option value ='1'>步行</option> <option value ='2'>公交</option><option value ='3'>地铁</option><option value ='4'>开车</option> </select></b>");
+					*/
 					var inforWindow = new AMap.InfoWindow({
-						offset:new AMap.Pixel(0,-23),
+	
+					offset:new AMap.Pixel(0,-23),
 						content:info.join("<br>")
 					});
 					AMap.event.addListener(marker,"click",function(e){

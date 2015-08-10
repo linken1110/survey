@@ -1,90 +1,38 @@
 <?php
 	
-class User extends MY_Controller{
-	private $password = "test123456";	
+class Login extends MY_Controller{
 		public function __construct(){
 			parent::__construct();
             		$this->load->model('account_model');
+			$this->load->library('session');
 		}
-	
-		public function quick_login(){
-			$data = array('code'=>0,'user_id'=>'','message'=>'');
-			$mac_address = $this->input->get_post('mac_address');
-			$udid = urldecode($this->input->get_post('udid'));
-			$os_type = $this->input->get_post('os_type');
-			$os_version = $this->input->get_post('os_version');
-
-			if(is_null ($os_type) || ($os_type == 1 && !$udid) || ($os_type == 2 && !$mac_address)){
-
-				$data['code'] = 4001;
-				$data['message'] = 'error parameters';
-            			echo json_encode($data);
-            			return;
-			}
-			if($os_type == 1){//ios			
-				$result = $this->account_model->get_user_by_udid($udid);
-				if(empty ($result)){
-				$param = array('udid'=>$udid,
-							   'create_time'=>date("Y-m-d H:i:s" ,strtotime( time() )) ,
-								'nickname'=>'unkonwuser',
-							   'os_type'=>$os_type,
-							   'password'=>sha1($this->password));
-				$uid = $this->account_model->insert($param);
-				$data['user_id'] = $uid;
-				$data['code'] = 1;
-				$data['message'] = 'success';
-				}
-				else{
-					$data['user_id'] = $result['user_id'];
-					$data['code'] = 1;
-					$data['message'] = 'success';
-				}
-			}else if($os_type == 2){
-				$result = $this->account_model->get_user_by_macaddress($mac_address);
-				if(empty ($result)){
-				$param = array('udid'=>$udid,
-								'create_time'=>date("Y-m-d H:i:s" ,strtotime( time() )) ,
-								'nickname'=>'unkonwuser',
-							   'os_type'=>$os_type,
-							   'password'=>sha1($this->password));
-				$uid = $this->account_model->insert($param);
-				$data['user_id'] = $uid;
-				$data['code'] = 1;
-				$data['message'] = 'success';
-				}
-				else{
-				$data['user_id'] = $result['user_id'];
-				$data['code'] = 1;
-				$data['message'] = 'success';
-				}
+		public function index(){
 			
-			}
-            	echo json_encode($data);
-	}
-	public function login(){
-		$data = array('code'=>0,'user_id'=>'','message'=>'','token'=>'');
-		$login_name = $this->input->get_post('login_name');
+			$this->load->view('login');
+		}
+	public function do_login(){
+		$data =array();
+		$login_name = $this->input->get_post('name');
 		$password = $this->input->get_post('password');
 		if(!$login_name || !$password){
 			$data['code'] = 4001;
 			$data['message'] = 'error parameters';
-			echo json_encode($data);
+			$this->load->view('login',$data);
 			return;
 		}
 		//step1:check uid
 		$user = $this->account_model->get_user_by_nickname($login_name);
 		if(!empty($user)){
 			if(sha1($password) == $user['pass']){
-				$data['user_id'] = $user['id'];
-				$data['code'] = 1;
-				$data['message'] = 'success';
-				echo json_encode($data);
+				$this->session->set_userdata('user_info',$user);
+				redirect('/main/', 'refresh');
 				return;
 			}
 		}
 		$data['code'] = 4002;
 		$data['message'] = 'login failed';
-		echo json_encode($data);
+		$this->load->view('login',$data);
+                        return;
 	}
 	public function update_nickname(){
 		$data = array('code'=>0,'message'=>'');

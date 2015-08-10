@@ -62,13 +62,12 @@
 		    })
 		});
 		//起始位置
-/*		var marker = new AMap.Marker({ //创建自定义点标注                 
+		var marker = new AMap.Marker({ //创建自定义点标注                 
   			map:mapObj,                 
   				position: new AMap.LngLat(116.406326, 39.903942),                 
  			offset: new AMap.Pixel(-10,-34)               
   			                
 		});
-	*/
 		var geocoder;
 
 		//加载地理编码插件
