@@ -10,7 +10,14 @@ class Survey extends MY_Controller{
 			$this->load->model('survey_model');
 			$this->load->model('survey_question_model');
 			$this->load->model('category_model');
-			
+			$this->load->model('trip_question_option_model');
+			$this->load->model('survey_trip_question_model');
+			$this->load->model('subtrain_model');
+			$this->load->model('subtrain_detail_model');
+			$this->load->model('home_info_model');
+			$this->load->model('answer_model');
+			$this->load->model('user_info_model');
+			$this->load->model('trip_info_model');
 		}
 		public function quest_group(){
 			$data = array('code'=>1,'message'=>'ok');
@@ -29,25 +36,73 @@ class Survey extends MY_Controller{
 				return;
 			}
 			$question_list = $this->get_question_list($pid);
+			$a = substr( $list['category_id'], 0, 1 );
+			$b = substr( $list['category_id'], 1, 1 );
+			$c = substr( $list['category_id'], 2, 1 );
+			$d = substr( $list['category_id'], 3, 1 );
+			if($a ==1){
+				$result[] = $this->get_category($pid,1,$question_list);
+			}
+			if($b ==1){
+                                $result[] = $this->get_category($pid,2,$question_list);
+                        }
+			if($c ==1){
+                                $result[] = $this->get_category($pid,3,$question_list);
+                        }
+			if($d ==1){
+                               // $result[] = $this->get_category($pid,4,$question_list);
+				$data['trip'] = $this->get_trip_data($pid);
+                        }
+			$data['result'] = $result;
+			$data['subtrain'] = $this->get_subtrain($pid);
+			echo json_encode($data, JSON_UNESCAPED_UNICODE); 
+		}
+		private function get_subtrain($id){
 			$result = array();
-			foreach ($list as $category){
-				$detail = $this->category_model->get_by_id($category['category_id']);
-				if(!empty ($detail)){
-					$tmp['id'] = $category['category_id'];
-					$tmp['areaid'] = $category['project_id'];
-					$tmp['questname'] = $detail['name'];
-					$tmp['question_list'] = $this->get_question_list_by_category_id($question_list,$category['category_id']);
+			$subtrains =  $this->subtrain_model->get_by_pid($id);
+			if(!empty($subtrains)){
+				foreach($subtrains as $subtrain){
+					$tmp['id'] = $subtrain['id'];
+                                	$tmp['name'] = $subtrain['name'];
+					$data = $this->subtrain_detail_model->get_by_subtrain_id($subtrain['id']);
+					$tmp['subtrain_list'] = $data;
 					$result[] = $tmp;
 				}
 			}
-			$data['result'] = $result;
-			echo json_encode($data, JSON_UNESCAPED_UNICODE); 
+			return $result;
+		}
+		private function get_trip_data($id){
+			$result = array();
+			$status = 0;
+			$question = $this->survey_trip_question_model->get_by_id($id,1);
+                        if(!empty ($question)){
+                                $status = $question['status'];
+                        }
+                        $result['controlflag'] = $status;
+			$result['options1'] = $this->trip_question_option_model->get_by_type($id,1);
+                        $result['options2'] = $this->trip_question_option_model->get_by_type($id,2);
+                        $result['options3'] = $this->trip_question_option_model->get_by_type($id,3);
+			return $result;			
+		}
+		private function get_category($pid,$cid,$question_list){
+			$result = array();
+			$detail = $this->category_model->get_by_id($cid);
+                                if(!empty ($detail)){
+                                        $tmp['id'] = $cid;
+                                        $tmp['areaid'] = $pid;
+                                        $tmp['questname'] = $detail['name'];
+                                        $tmp['question_list'] = $this->get_question_list_by_category_id($question_list,$cid);
+                                        $result = $tmp;
+                                }
+			return $result;
 		}
 		private function get_question_list_by_category_id($question_list,$category_id){
 			$result = array();
 			foreach ($question_list as $data){
+				if(!empty($data)){
 				if($data['category_id'] == $category_id){
 					$result[] = $data;
+				}
 				}
 			}
 			return $result;
@@ -72,6 +127,7 @@ class Survey extends MY_Controller{
 				$data['question'] = $question['question'];
 				$data['option_list'] = $this->question_option_model->get_by_questionid($question_id);
 				$data['is_parent']  = ($question['type'] == 0)?1:0;
+				$data['default']  = $question['default_value'];
 				$data['sub_question'] = $this->get_subquestion($question_id);
 			}
 			return $data;
@@ -80,9 +136,10 @@ class Survey extends MY_Controller{
 			$result = array();
 			$data = $this->question_model->get_by_parentid($question_id);
 			if(!empty($data)){
-				foreach($data as $tmp)
+				foreach($data as $tmp){
 				$question = $this->get_question($tmp['id']);
 				$result[] = $question;
+				}
 			}
 			return $result;
 		}
@@ -238,6 +295,82 @@ class Survey extends MY_Controller{
 		$data['user_id'] = $uid;
 		$data['message'] = 'ok';
 		echo json_encode($data);
+	}
+	public function upload_data(){
+		$json = $this->input->get_post('parameter');
+		$result=array('status'=>0,'message'=>'');
+//	$json= '{"pid":1,"familyInfo":{"address":"测试1号","zhuhuType":"入住户","userId":"3","lat":"10.10.10.10","lng":"10.10.10.1","outEndTime":0,"questionAndAnswer":"1:-1|3:-1|4:-1|6:-1|7:-1|9:-1|10:-1|14:-1|15:-1|16:-1|17:-1|19:-1|20:-1","phoneNumber":"","outStartTime":0,"createTime":1441028808319,"id":19},"peopleList":[{"outList":[{"aboardAddress":"","debusAddress":"","userId":"3","totalPeople":"","subwayToDestUseTime":1441028808319,"subwayToDestCost":"","isWalk":"","outEndAddress":"","payOff":"","outStartAddress":"","outtype":"","outToSubwayCost":"","outToSubwayUseTime":1441028808319,"outpurpose":"","outStartTime":1441028808319,"outEndTime":1441028808319,"endLat":0.0,"startLat":0.0,"startLng":0.0,"endLng":0.0,"house_id":15,"id":24,"people_id":23}],"peopleInfo":{"userId":"3","questionAndAnswer":"12:-1|21:-1|23:-1|24:-1|25:-1|26:-1","createTime":1441028810530,"isPost":0,"houseId":15,"id":23}}]}';
+		$data = json_decode($json,true);
+		$familyInfo =  $data['familyInfo'];
+		$pid = $data['pid'];
+		if(!empty($familyInfo)){
+			$home_info = $this->home_info_model->get_by_id($familyInfo['userId'],$familyInfo['id']);
+			if(empty($home_info)){
+				$home_id = $this->home_info_model->insert(array('address'=>$familyInfo['address'],'lat'=>$familyInfo['lat'],'lng'=>$familyInfo['lng'],'type'=>$familyInfo['zhuhuType'],'phone'=>$familyInfo['phoneNumber'],'user_id'=>$familyInfo['userId'],'create_date'=>date('Y-m-d H:i:s',$familyInfo['createTime']),'home_id'=>$familyInfo['id'],'project_id'=>$pid));
+				$arrs = explode('|',$familyInfo['questionAndAnswer']);
+				if(!empty($arrs)){
+					foreach($arrs as $arr){
+						$key_values = explode(':',$arr);
+						if(!empty($key_values)){
+							$question = $key_values[0];
+							$answer = $key_values[1];
+							$this->answer_model->insert(array('home_id'=>$home_id,'number'=>$question,'result'=>$answer));
+						}
+					}
+				}
+				$people_list = $data['peopleList'];
+				if(!empty($people_list)){
+					foreach($people_list as $people){
+						$people_info = $people['peopleInfo'];
+						$people_id = $this->user_info_model->insert(array('home_id'=>$home_id,'people_id'=>$people_info['id']));
+						$arrs = explode('|',$people_info['questionAndAnswer']);
+						if(!empty($arrs)){
+                                        		foreach($arrs as $arr){
+                                                		$key_values = explode(':',$arr);
+                                                		if(!empty($key_values)){
+                                                	        	$question = $key_values[0];
+                                                        		$answer = $key_values[1];
+                                                        		$this->answer_model->insert(array('home_id'=>$home_id,'number'=>$question,'result'=>$answer,'user_id'=>$people_id));
+                                                		}
+                                        		}
+                                		}
+						$outlist = $people['outList'];
+						if(!empty($outlist)){
+							foreach($outlist as $out){
+								$this->trip_info_model->insert(array('user_id'=>$people_id,'purpose'=>$out['outpurpose'],'people_num'=>$out['totalPeople'],'start_time'=>date('Y-m-d H:i:s',$out['outStartTime']),'end_time'=>date('Y-m-d H:i:s',$out['outEndTime']),'start_address'=>$out['outStartAddress'],'end_address'=>$out['outEndAddress'],'start_lng'=>$out['startLng'],'start_lat'=>$out['startLat'],'end_lng'=>$out['startLng'],'start_lat'=>$out['startLat'],'iswalk'=>$out['isWalk'],'outway'=>$out['outtype'],'pay_off'=>$out['payOff'],'start_station'=>$out['aboardAddress'],'end_station'=>$out['debusAddress'],'to_subway_time'=>$out['outToSubwayUseTime'],'to_dest_time'=>$out['subwayToDestUseTime'],'to_subway_cost'=>$out['outToSubwayCost'],'to_dest_cost'=>$out['subwayToDestCost'],'start_address_type'=>$out['land_usage1'],'end_address_type'=>$out['land_usage2']));
+							}
+						}
+						
+					}
+				}
+				$result['status'] = 1;
+				$result['message'] = "ok";
+			}else{
+				$result['status'] = 4002;
+                        	$result['message'] = "data has exists";
+			}
+			
+		}else{
+			$result['status'] = 4001;
+			$result['message'] = "invalid data";
+		}
+		echo json_encode($result);
+	}
+	public function Synchronous(){
+		$data = array('home_number'=>0,'max_home_id'=>0);
+		$uid = $this->input->get_post('userId');
+		if(!empty($uid)){
+			$home_num = $this->home_info_model->get_home_num($uid);
+			$max_home_id = $this->home_info_model->get_max_home_id($uid);
+			if(!empty($home_num)){
+				$data['home_number'] = $home_num['num'];
+			}
+			if(!empty($max_home_id)){
+				$data['max_home_id'] = $max_home_id['home_id'];
+			}
+		}
+		echo json_encode($data);
+		
 	}
 }
 ?>

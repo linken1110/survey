@@ -1,6 +1,6 @@
 <?php 
-class Project_member_model extends CI_Model{
-	private $tab_name ='project_member';
+class Subtrain_detail_model extends CI_Model{
+	private $tab_name ='subtrain_detail';
 	public function __construct(){
 		$this->load->database('master');
 	}
@@ -18,22 +18,11 @@ class Project_member_model extends CI_Model{
 		}
 		return false;
 	}
-	public function get_by_id($id){
-		$this->db->where('id',$id);
+	public function get_by_subtrain_id($id){
+		$this->db->where('subtrain_id',$id);
 		$query = $this->db->get($this->tab_name);
-		return $query->row_array();
+		return $query->result_array();
 	}
-	public function get_by_uid($id){
-                $this->db->where('uid',$id);
-                $query = $this->db->get($this->tab_name);
-                return $query->row_array();
-        }
-	public function get_by_pid($id){
-                $this->db->where('project_id',$id);
-                $query = $this->db->get($this->tab_name);
-                return $query->result_array();
-        }
-
 	public function get_by_name($name){
 		$this->db->where('name',$name);
 		$query = $this->db->get($this->tab_name);
@@ -44,12 +33,19 @@ class Project_member_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-	public function delete_by_id($id,$uid){
-		$this->db->where('project_id',$id);
-		$this->db->where('uid',$uid);
-		$this->db->delete($this->tab_name);
-	}
+	public function get_by_max_subid($id){
+		$this->db->select('id');
+		$this->db->where('subtrain_id',$id);
+		$this->db->order_by('id','desc');
+		$this->db->limit(1);
+		$query = $this->db->get($this->tab_name);
+                return $query->row_array();
 
+	}
+	public function delete_by_id($id){
+		$this->db->where('subtrain_id',$id);
+		$query = $this->db->delete($this->tab_name);
+	}
 }
 
 ?>

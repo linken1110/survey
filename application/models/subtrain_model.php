@@ -1,6 +1,6 @@
 <?php 
-class Project_member_model extends CI_Model{
-	private $tab_name ='project_member';
+class Subtrain_model extends CI_Model{
+	private $tab_name ='subtrain';
 	public function __construct(){
 		$this->load->database('master');
 	}
@@ -20,20 +20,14 @@ class Project_member_model extends CI_Model{
 	}
 	public function get_by_id($id){
 		$this->db->where('id',$id);
-		$query = $this->db->get($this->tab_name);
-		return $query->row_array();
-	}
-	public function get_by_uid($id){
-                $this->db->where('uid',$id);
                 $query = $this->db->get($this->tab_name);
                 return $query->row_array();
-        }
+	}
 	public function get_by_pid($id){
-                $this->db->where('project_id',$id);
-                $query = $this->db->get($this->tab_name);
-                return $query->result_array();
-        }
-
+		$this->db->where('pid',$id);
+		$query = $this->db->get($this->tab_name);
+		return $query->result_array();
+	}
 	public function get_by_name($name){
 		$this->db->where('name',$name);
 		$query = $this->db->get($this->tab_name);
@@ -44,11 +38,7 @@ class Project_member_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-	public function delete_by_id($id,$uid){
-		$this->db->where('project_id',$id);
-		$this->db->where('uid',$uid);
-		$this->db->delete($this->tab_name);
-	}
+
 
 }
 

@@ -24,7 +24,7 @@ class Main extends MY_Controller {
 	public function index()
 	{
 		$data['user'] = $this->user_info;
-		$this->load->view('main',$data);
+		$this->load->view('index',$data);
 	}
 	public function admin(){
 		$data['user'] = $this->user_info;

@@ -1,6 +1,6 @@
 <?php 
-class Question_option_model extends CI_Model{
-	private $tab_name ='question_option';
+class Trip_question_option_model extends CI_Model{
+	private $tab_name ='trip_question_option';
 	public function __construct(){
 		$this->load->database('master');
 	}
@@ -28,6 +28,11 @@ class Question_option_model extends CI_Model{
                 $this->db->where('question_id',$question_id);
                 $query = $this->db->delete($this->tab_name);
         }
+	public function delete_by_type($id,$type){
+                $this->db->where('id',$id);
+		$this->db->where('type',$type);
+                $query = $this->db->delete($this->tab_name);
+        }
 	public function get_by_name($name){
 		$this->db->where('name',$name);
 		$query = $this->db->get($this->tab_name);
@@ -38,7 +43,13 @@ class Question_option_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-
+	public function get_by_type($id,$type){
+		$this->db->select('number,content');
+		$this->db->where('id',$id);
+		$this->db->where('type',$type);
+		$query = $this->db->get($this->tab_name);
+                return $query->result_array();
+	}
 
 }
 

@@ -11,7 +11,7 @@ class Project_category_model extends CI_Model{
 	public function get_by_pid($pid){
 		$this->db->where('project_id',$pid);
 		$query = $this->db->get($this->tab_name);
-		return $query->result_array();
+		return $query->row_array();
 	}
 	public function get_by_cid($cid){
 		$this->db->where('category_id',$cid);
@@ -24,7 +24,11 @@ class Project_category_model extends CI_Model{
                 $query = $this->db->get($this->tab_name);
                 return $query->row_array();
         }
-
+	public function update($pid,$category_list){
+		$this->db->set('category_id',$category_list);
+		$this->db->where('project_id',$pid);
+		$this->db->update($this->tab_name);
+	}
 
 
 }

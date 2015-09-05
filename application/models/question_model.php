@@ -39,7 +39,10 @@ class Question_model extends CI_Model{
 		return $query->row_array();
 	}
 
-
+	public function delete_by_id($id){
+                $this->db->where('id',$id);
+                $this->db->delete($this->tab_name);
+        }
 }
 
 ?>

@@ -35,23 +35,32 @@ class Project_member extends MY_Controller {
 			}
 		}
 		$data['list'] = $list;
+		$data['id'] = $id;
 		$this->load->view('member_list',$data);
 	}
-	public function add_project(){
+	public function add_member(){
+		$id = $this->input->get_post('id');
 		$data['user'] = $this->user_info;
-		$this->load->view('add_project',$data);
+		$data['id'] = $id;
+		$this->load->view('add_member',$data);
 	}
-	public function edit_project(){
-		$id = $this->input->get('id');
-		$data['info'] = $this->project_model->get_by_id($id);
-                $data['user'] = $this->user_info;
-                $this->load->view('edit_project',$data);
-        }
-	public function delete_project(){
-		$id = $this->input->get('id');
+	public function delete_member(){
+		$id = $this->input->get_post('pid');
+		$uid = $this->input->get_post('uid');
+		$this->project_member_model->delete_by_id($id,$uid);
 		$data['user'] = $this->user_info;
-                $data['list'] = $this->project_model->get_all();
-                $this->load->view('project_list',$data);
+		$result = $this->project_member_model->get_by_pid($id);
+                $list = array();
+                if(!empty($result)){
+                        foreach($result as $tmp){
+                                $user = $this->account_model->get_user_by_uid($tmp['uid']);
+                                $tmp['name'] = $user['name'];
+                                $list[] = $tmp;
+                        }
+                }
+                $data['list'] = $list;
+		$data['id'] = $id;
+                $this->load->view('member_list',$data);
 	}
 	public function update(){
 		$id = $this->input->post('id');
@@ -72,17 +81,47 @@ class Project_member extends MY_Controller {
 	public function add(){
 		$id = $this->input->post('id');
                 $name = $this->input->post('name');
-                $province = $this->input->post('province');
-                $description = $this->input->post('description');
-                $create_time = $this->input->post('create_time');
-                $param = array('name'=>$name,
-                                'description'=>$description,
-                                'province'=>$province,
-                                'create_time'=>$create_time);
-		$this->project_model->insert($param);
-                $data['user'] = $this->user_info;
-                $data['list'] = $this->project_model->get_all();
-                $this->load->view('project_list',$data);
+                $pass = $this->input->post('pass');
+                $position = $this->input->post('position');
+		$data['user'] = $this->user_info;
+		if(!$name || !$pass){
+			$data['message'] = '用户名和密码不能为空';
+                        $this->load->view('error',$data);
+                        return;
+		}
+		 $user = $this->account_model->get_user_by_nickname($name);
+                if(!empty($user)){
+                        $data['message'] = '注册失败,用户名已经存在';
+			$this->load->view('error',$data);
+                        return;
+                }
+                 $param = array(
+                                                                'create_date'=>date("Y-m-d H:i:s" ,time() ) ,
+                                                                'name'=>$name,
+                                                           'pass'=>sha1($pass));
+                                $uid = $this->account_model->insert($param);
+		if($uid >0){
+        	        $param = array('project_id'=>$id,
+                                'uid'=>$uid,
+                                'position'=>$position,
+                                );
+			$this->project_member_model->insert($param);
+			$result = $this->project_member_model->get_by_pid($id);
+                	$list = array();
+                	if(!empty($result)){
+                        foreach($result as $tmp){
+                                $user = $this->account_model->get_user_by_uid($tmp['uid']);
+                                $tmp['name'] = $user['name'];
+                                $list[] = $tmp;
+                        }
+                	}
+                	$data['list'] = $list;
+			$data['id'] = $id;
+                	$this->load->view('member_list',$data);
+		}else{
+			$data['message'] = '系统错误';
+                        $this->load->view('error',$data);
+		}
 
 	}
 	public function search(){

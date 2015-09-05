@@ -19,36 +19,15 @@ class User_info_model extends CI_Model{
 		return false;
 	}
 	public function get_user_by_uid($uid){
-		$this->db->where('user_id',$uid);
+		$this->db->where('id',$uid);
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-	public function get_user_by_nickname($nickname){
-		$this->db->where('nickname',$nickname);
-		$query = $this->db->get($this->tab_name);
-		return $query->row_array();
+	public function get_by_home_id($id){
+		$this->db->where('home_id',$id);
+                $query = $this->db->get($this->tab_name);
+                return $query->row_array();
 	}
-	public function get_user_by_email($email){
-		$this->db->where('email',$email);
-		$query = $this->db->get($this->tab_name);
-		return $query->row_array();
-	}
-	public function get_user_by_phone($phone){
-		$this->db->where('phone',$phone);
-		$query = $this->db->get($this->tab_name);
-		return $query->row_array();
-	}
-	public function get_user_by_macaddress($macaddress){
-		$this->db->where('mac_address',$macaddress);
-		$query = $this->db->get($this->tab_name);
-		return $query->row_array();
-	}
-	public function get_user_by_udid($udid){
-		$this->db->where('udid',$udid);
-		$query = $this->db->get($this->tab_name);
-		return $query->row_array();
-	}
-
 
 }
 

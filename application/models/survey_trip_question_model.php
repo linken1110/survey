@@ -1,6 +1,6 @@
 <?php 
-class Project_member_model extends CI_Model{
-	private $tab_name ='project_member';
+class Survey_trip_question_model extends CI_Model{
+	private $tab_name ='survey_trip_question';
 	public function __construct(){
 		$this->load->database('master');
 	}
@@ -11,29 +11,23 @@ class Project_member_model extends CI_Model{
 
 	}
 	public function update($id,$array){
-		$this->db->where('id',$id);
+		$this->db->where('survey_id',$id);
 		$this->db->update($this->tab_name,$array);
 		if($this->db->affected_rows() >0 ){
 			return true;
 		}
 		return false;
 	}
-	public function get_by_id($id){
-		$this->db->where('id',$id);
+	public function get_by_id($pid,$number){
+		$this->db->where('survey_id',$pid);
+		$this->db->where('number',$number);
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-	public function get_by_uid($id){
-                $this->db->where('uid',$id);
-                $query = $this->db->get($this->tab_name);
-                return $query->row_array();
+	public function delete_by_questionid($question_id){
+                $this->db->where('question_id',$question_id);
+                $query = $this->db->delete($this->tab_name);
         }
-	public function get_by_pid($id){
-                $this->db->where('project_id',$id);
-                $query = $this->db->get($this->tab_name);
-                return $query->result_array();
-        }
-
 	public function get_by_name($name){
 		$this->db->where('name',$name);
 		$query = $this->db->get($this->tab_name);
@@ -44,10 +38,12 @@ class Project_member_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-	public function delete_by_id($id,$uid){
-		$this->db->where('project_id',$id);
-		$this->db->where('uid',$uid);
-		$this->db->delete($this->tab_name);
+	public function get_by_type($id,$type){
+		$this->db->select('number,content');
+		$this->db->where('id',$id);
+		$this->db->where('type',$type);
+		$query = $this->db->get($this->tab_name);
+                return $query->result_array();
 	}
 
 }

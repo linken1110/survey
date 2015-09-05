@@ -43,19 +43,32 @@ class Project extends MY_Controller {
                 $data['info'] = $this->project_model->get_by_id($id);
                 $data['user'] = $this->user_info;
 		$list = $this->project_category_model->get_by_pid($id);
-                if(!empty($list)){
-                        foreach($list as $tmp){
-                                $category = $this->category_model->get_by_id($tmp['category_id']);
-                                $result[] = $tmp['category_id'];
+		$result = array();
+		if(!empty($list)){
+		 $a = substr( $list['category_id'], 0, 1 );
+                        $b = substr( $list['category_id'], 1, 1 );
+                        $c = substr( $list['category_id'], 2, 1 );
+                        $d = substr( $list['category_id'], 3, 1 );
+                        if($a ==1){
+                                $result[] = 1;
                         }
-                }
-
+                        if($b ==1){
+                                $result[] = 2;
+                        }
+                        if($c ==1){
+                                $result[] = 3;
+                        }
+                        if($d ==1){
+                                $result[] = 4;
+                        }
+		}
                 $data['list'] = $result;
 		$data['id'] = $id;
 		$this->load->view('edit_category',$data);
         }
 	public function delete_project(){
 		$id = $this->input->get('id');
+		$this->project_model->delete_by_id($id);
 		$data['user'] = $this->user_info;
                 $data['list'] = $this->project_model->get_all();
                 $this->load->view('project_list',$data);
@@ -75,6 +88,17 @@ class Project extends MY_Controller {
                 $data['list'] = $this->project_model->get_all();
                 $this->load->view('project_list',$data);
 
+	}
+	public function update_category(){
+		$id = $this->input->post('id');
+		$category_list = $this->input->post('category_list');
+		$list = $this->project_category_model->get_by_pid($id);
+		if(!empty ($list)){
+			$this->project_category_model->update($id,$category_list);
+		}else{
+			$this->project_category_model->insert(array('project_id'=>$id,'category_id'=>$category_list));
+		}
+		redirect('/question/category_list?id='.$id, 'refresh');	
 	}
 	public function add(){
 		$id = $this->input->post('id');

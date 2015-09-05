@@ -10,6 +10,14 @@ class Survey_question_model extends CI_Model{
 		return $this->db->insert_id();
 
 	}
+	public function get_max_number($id){
+		$this->db->select('number');
+		$this->db->where('survey_id',$id);
+		$this->db->order_by('number','desc');
+		$this->db->limit(1);
+		$query = $this->db->get($this->tab_name);
+		return $query->row_array();
+	}
 	public function update($id,$array){
 		$this->db->where('id',$id);
 		$this->db->update($this->tab_name,$array);
@@ -42,7 +50,10 @@ class Survey_question_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-
+	public function delete_by_question_id($id){
+                $this->db->where('question_id',$id);
+                $this->db->delete($this->tab_name);
+        }
 
 }
 
