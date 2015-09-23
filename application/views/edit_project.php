@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze后台管理系统模板HTML首页 - 源码之家</title>
+<title>调查问卷后台管理系统</title>
   <meta name="description" content="这是一个 index 页面">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -88,14 +88,6 @@
             </select>
           </div>
         </div>
-                <div class="am-g am-margin-top-sm">
-            <div class="am-u-sm-2 am-text-right">
-              项目描述
-            </div>
-            <div class="am-u-sm-10">
-              <textarea rows="10" name="description" placeholder="请使用富文本编辑插件"><?php echo $info['description']?></textarea>
-            </div>
-          </div>
         <div class="am-g am-margin-top">
           <div class="am-u-sm-2 am-text-right">
             发布时间
@@ -103,7 +95,7 @@
           <div class="am-u-sm-10">
               <div class="am-form-group am-form-icon">
 		 <i class="am-icon-calendar"></i>
-                <input type="text" name="create_time" class="am-form-field am-input-sm" placeholder="时间" value="<?php echo $info['create_time']?>">
+                <input type="text" name="create_time" class="am-form-field am-input-sm" placeholder="时间" value="<?php echo $info['create_time']?>" onfocus="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true,minDate:'%y-%M-%d',firstDayOfWeek:1})">
               </div>
           </div>
         </div>
@@ -138,6 +130,7 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <script src="../../assets/js/jquery-1.9.1.min.js"></script>
 <script src="../../assets/js/amazeui.min.js"></script>
+<script src="../../assets/js/My97DatePicker/WdatePicker.js"></script>
 <!--<![endif]-->
 </body>
 <script type="text/javascript">

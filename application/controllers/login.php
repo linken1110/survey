@@ -25,7 +25,7 @@ class Login extends MY_Controller{
 		if(!empty($user)){
 			if(sha1($password) == $user['pass']){
 				$this->session->set_userdata('user_info',$user);
-				redirect('/main/', 'refresh');
+				redirect('/survey_result/home_page', 'refresh');
 				return;
 			}
 		}

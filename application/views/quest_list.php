@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze后台管理系统模板HTML首页 - 源码之家</title>
+<title>调查问卷后台管理系统</title>
   <meta name="description" content="这是一个 index 页面">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -16,8 +16,25 @@
   <link rel="stylesheet" href="../../assets/css/admin.css">
  <link rel="stylesheet" href="../../assets/css/admin.css">
   <link rel="stylesheet" href="../../assets/css/js_demo.css">
+ <link rel="stylesheet" href="../../assets/css/screen.css">
+<link rel="stylesheet" href="../../assets/css/editor.css">
+<link rel="stylesheet" href="../../assets/css/jquery.gridly.css">
 </head>
-<body>
+<body class="g_wrapper g_wrapper_full page_edit g_survey" style="font-weight:400;line-height:1.6;font-size:1.6rem;font-family:'Segoe UI','Lucida Grande',Helvetica,Arial,'Microsoft YaHei',FreeSans,Arimo,'Droid Sans','wenquanyi micro hei','Hiragino Sans GB','Hiragino Sans GB W3',FontAwesome,sans-serif;">
+<style type="text/css">
+  .gridly {
+    position: relative;
+    width: 100%;
+  }
+  .brick.small {
+    width: 100%;
+    height: 140px;
+  }
+  .brick.large {
+    width: 100%;
+    height: 300px;
+  }
+</style>
 <!--[if lte IE 9]>
 <p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
   以获得更好的体验！</p>
@@ -29,76 +46,66 @@
   <!-- content start -->
 <!-- content start -->
   <div class="admin-content">
-
-    <div class="am-cf am-padding">
-      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">问题列表</strong> </div>
-    </div>
-
-    <div class="am-g">
-      <div class="am-u-md-6 am-cf">
-        <div class="am-fl am-cf">
-          <div class="am-btn-toolbar am-fl">
-            <div class="am-btn-group am-btn-group-xs">
-              <button type="button" class="am-btn am-btn-default" onclick="window.location.href='/main/add_quest'"><span class="am-icon-plus"></span> 新增</button>
-              <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+<div class="survey_options published" style="display: block;margin-top:20px;margin-bottom:-20px;margin-right:20px;">
+		 <a id="save_message" class="btn btn_middle btn_white"style="margin-right:300px;display: none;">保存成功</a>
+		<a onclick="window.location.reload();" id="preview_survey" class="btn btn_middle btn_white">撤销</a>
+                <a onclick="save_survey();" id="publish_survey" class="btn btn_middle btn_blue btn_start"><i></i>保存修改</a>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="survey_wrap">
+	<div class="survey_title" style="margin-top:-50px;">
 
-    <div class="am-g">
-      <div class="am-u-sm-12">
-        <form class="am-form">
-          <table class="am-table am-table-striped am-table-hover table-main">
-            <thead>
-              <tr>
-                <th class="table-check"><input type="checkbox" /></th><th class="table-type">题目内容</th><th class="table-author">题目类型</th><th class="table-date">修改日期</th><th class="table-set">操作</th>
-              </tr>
-          </thead>
-          <tbody>
-		<?php foreach ($list as $item):?>
-            <tr>
-              <td><input type="checkbox" /></td>
-              <td><?php echo $item['question']?></td>
-	      <td><?php if($item['type'] == 1){?>填空题<?php }else if( $item['type'] == 2){?>选择题 <?php }else if( $item['type'] == 3){?>多选题 <?php }else if( $item['type'] == 0){?>父标题<?php }?></td>
-              <td><?php echo $item['update_date']?></td>
-              <td>
-                <div class="am-btn-toolbar">
-                  <div class="am-btn-group am-btn-group-xs">
-                    <button class="am-btn am-btn-default am-btn-xs am-text-secondary" type="button" onclick="window.location.href='/question/edit_question?id=<?php echo $item['id']?>'"><span class="am-icon-pencil-square-o"></span> 编辑</button>
-                    <button class="am-btn am-btn-default am-btn-xs am-text-danger" type="button" onclick="window.location.href='/question/delete_question?id=<?php echo $item['id']?>'"><span class="am-icon-trash-o"></span> 删除</button>
-                  </div>
-                </div>
-              </td>
-            </tr>
-        <?php endforeach;?>
-          </tbody>
-        </table>
-          <div class="am-cf">
-  共 5 条记录
-  <div class="am-fr">
-    <ul class="am-pagination">
-      <li class="am-disabled"><a href="#">«</a></li>
-      <li class="am-active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><a href="#">»</a></li>
-    </ul>
-  </div>
+                            <div class="inner">
+
+                                <h1 class="title_content cke_editable cke_editable_inline cke_contents_ltr cke_show_borders" contenteditable="true" tabindex="0" spellcheck="false" role="textbox" aria-label="false" aria-describedby="cke_34" style="position: relative;">杭州市居民出行调查问卷</h1>
+
+                            </div>
+
+                        </div>
+
+	<ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list " style="margin-top:10px;">
+				       <li onclick = "add_question(2);" style="cursor:pointer;height:38px;line-height:38px;border:1px solid #e0e0e0;background-color:#fff;margin-bottom:3px"><i style=" display:inline-block;*display:inline;*zoom:1;vertical-align:middle;margin:0 10px;background-image:url(../../assets/image/sprites_ico_2x.png);background-size:241px 232px;background-position:-224px -17px;width:17px;height:16px; line-height:38px;"></i>单选题</li>
+		<li onclick = "add_question(3);"style="cursor:pointer;height:38px;line-height:38px;border:1px solid #e0e0e0;background-color:#fff;margin-bottom:3px"><i style=" display:inline-block;*display:inline;*zoom:1;vertical-align:middle;margin:0 10px;background-image:url(../../assets/image/sprites_ico_2x.png);background-size:241px 232px;background-position:-224px -101px;width:16px;height:16px; line-height:38px;"></i>多选题</li>
+		<li onclick = "add_question(1);" style="cursor:pointer;height:38px;line-height:38px;border:1px solid #e0e0e0;background-color:#fff;margin-bottom:3px"><i style=" display:inline-block;*display:inline;*zoom:1;vertical-align:middle;margin:0 10px;background-image:url(../../assets/image/sprites_ico_2x.png);background-size:241px 232px;background-position:-224px -149px;width:16px;height:14px; line-height:38px;"></i>填空题</li>
+		<li onclick = "add_question(4);"style="cursor:pointer;height:38px;line-height:38px;border:1px solid #e0e0e0;background-color:#fff;margin-bottom:3px"><i style=" display:inline-block;*display:inline;*zoom:1;vertical-align:middle;margin:0 10px;background-image:url(../../assets/image/sprites_ico_2x.png);background-size:241px 232px;background-position:-224px -117px;width:17px;height:16px; line-height:38px;"></i>位置题</li>
+    	</ul>
+	<div class="survey_main">
+	<div class="survey_container">
+		<div class="page" data-pid="1" style="display: block;">
+		<div id='module_list'>
+			<?php $num  =0; foreach ($list as $item): $num++;?>
+				<div class='modules'>
+				<?php if ($item['type'] == 1 || $item['type'] == 4){?>
+				<div class="question question_text required" data-type="text" id="question_<?php echo $item['id']?>" data-id="<?php echo $item['id']?>"> <div class="inner"> <div class="title"> <span class="title_index"><span class="question_index" data-for="<?php echo $item['id']?>"><?php echo $num;?></span>. </span> <div class="title_text"> <p><?php echo $item['question']?></p></div>  <span class="required" title="必答" style="display: none;">*</span><span class="tips">  </span> </div><div class="inputs"style="margin-top:10px;"> <input class="survey_form_input" type="text" size="" maxlength="" id="text_<?php echo $item['id']?>" name="answer_<?php echo $item['id']?>" value="<?php echo $item['default']?>" placeholder="默认值"> </div> </div> <ul class="control"> <li><b title="编辑" class="edit" onclick="edit(<?php echo $item['id']?>);"><i></i></b></li> <li><b title="复制" class="copy"><i></i></b></li> <li><b title="删除" class="delete" onclick="delete_item(<?php echo $item['id']?>);"><i></i></b></li>  </ul></div>
+				<?php }else if( $item['type'] == 2){?>
+				<div class="question question_radio required" id="question_<?php echo $item['id']?>" data-type="radio" data-id="<?php echo $item['id']?>" style="display: block;"> <div class="inner"> <div class="title"> <span class="title_index"> <span class="question_index" data-for="<?php echo $item['id']?>"><?php echo $num;?></span>. </span> <div class="title_text"> <p><?php echo $item['question']?></p>
+ </div>  <span class="required" title="必答" style="display: none;">*</span>  <span class="tips">  </span> </div>  <div class="inputs">   
+				<?php foreach ($item['option_list'] as $option_list):?>
+					<div class="option_item" style="width: 100%;">  <input class="survey_form_checkbox" type="radio" name="answer_<?php echo $item['id']?>" data-oid="o-100-ABCD" id="option_<?php echo $item['id']?>_o-100-ABCD" value="<p><?php echo $option_list['content']?></p>
+"> <label for="option_q-39-tpPN_o-100-ABCD" style="font-weight:500"> <i class="survey_form_ui"></i> <div class="option_text"><p><?php echo $option_list['content']?></p>
+</div> <div class="display_tip" data-goto="" data-display="">   </div></label>   </div>
+
+				<?php endforeach;?>
+</div> </div> <ul class="control"> <li><b title="编辑" class="edit" onclick="edit(<?php echo $item['id']?>);"><i></i></b></li> <li><b title="复制" class="copy"><i></i></b></li>  <li><b title="删除" class="delete" onclick="delete_item(<?php echo $item['id']?>);"><i></i></b></li>  </ul></div>
+				<?php }else if( $item['type'] == 3){?>
+					 <div class="question question_radio required" id="question_<?php echo $item['id']?>" data-type="radio" data-id="<?php echo $item['id']?>" style="display: block;"> <div class="inner"> <div class="title"> <span class="title_index"> <span class="question_index" data-for="<?php echo $item['id']?>"><?php echo $num;?></span>. </span> <div class="title_text"> <p><?php echo $item['question']?></p>
+ </div>  <span class="required" title="必答" style="display: none;">*</span>  <span class="tips">  </span> </div>  <div class="inputs">
+                                <?php foreach ($item['option_list'] as $option_list):?>
+                                        <div class="option_item" style="width: 100%;">  <input class="survey_form_checkbox" type="checkbox" name="answer_<?php echo $item['id']?>" data-oid="o-100-ABCD" id="option_<?php echo $item['id']?>_o-100-ABCD" value="<p><?php echo $option_list['content']?></p>"> <label for="option_q-39-tpPN_o-100-ABCD" style="font-weight:500"> <i class="survey_form_ui"></i> <div class="option_text"><p><?php echo $option_list['content']?></p></div> <div class="display_tip" data-goto="" data-display="">   </div></label>   </div>
+
+                                <?php endforeach;?>
+</div> </div> <ul class="control"> <li><b title="编辑" class="edit" onclick="edit(<?php echo $item['id']?>);"><i></i></b></li> <li><b title="复制" class="copy"><i></i></b></li> <li><b title="删除" class="delete" onclick="delete_item(<?php echo $item['id']?>);"><i></i></b></li>  </ul></div>
+
+				<?php }?>
+				</div>
+			<?php endforeach;?>
+			</div>
+		</div>
+	</div>
+	</div>
 </div>
-          <hr />
-          <p>注：.....</p>
-        </form>
-      </div>
-
-    </div>
-  </div>
+</div>
   <!-- content end -->  
 <!-- content end -->
-
 </div>
 
 <footer>
@@ -114,9 +121,37 @@
 <![endif]-->
 
 <!--[if (gte IE 9)|!(IE)]><!-->
-<script src="../../assets/js/jquery.min.js"></script>
+<script src="../../assets/js/jquery.js"></script>
 <script src="../../assets/js/amazeui.min.js"></script>
 <!--<![endif]-->
 <script src="../../assets/js/app.js"></script>
+<script src="../../assets/js/jquery.gridly.js"></script>
+<script src="../../assets/js/jquery-ui.min.js"></script>
+<!--
+<script src="../../assets/js/jquery.sortable.js"></script>
+<script src="../../assets/js/jquery.sortable.min.js"></script>
+-->
+<script src="../../assets/js/sortable/Sortable.js"></script>
+<script src="../../assets/js/sortable/Sortable.min.js"></script>
+<script src="../../assets/js/survey.js"></script>
+<script type="text/javascript">
+ $(function() {
+var el = document.getElementById('module_list');
+window.x = new Sortable(el, {
+				draggable: '.modules',
+				handle: '.question',
+				onAdd: function (evt){ console.log('onAdd.foo:', evt.item); },
+				onUpdate: function (evt){ console.log('onUpdate.foo:', evt.item); },
+				onRemove: function (evt){ console.log('onRemove.foo:', evt.item); },
+				onStart:function(evt){ console.log('onStart.foo:',evt.item);},
+				onEnd: function(evt){ 
+					restore();			
+				}
+  });
+});
+var edit_flag = false;
+var category_id =  "<?php echo $category_id?>";
+var pid = <?php echo $id?>;
+</script>
 </body>
 </html>

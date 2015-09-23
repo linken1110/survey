@@ -24,7 +24,7 @@ ul {
 }
 
 .admin-sidebar {
-  width: 260px;
+  width: 240px;
   min-height: 100%;
   float: left;
   border-right: 1px solid #cecece;
@@ -72,7 +72,9 @@ ul {
 }
 
 .admin-content-list li {
-  border: 1px solid #e9ecf1;
+//  border: 1px solid #e9ecf1;
+//  padding-top:10px;
+  padding-bottom:10px;
   border-width: 0 1px;
   margin-left: -1px;
 }
@@ -203,11 +205,18 @@ ul {
 .table-check {
   width: 30px;
 }
-
+.table-question {
+  width: 100px;
+}
+.table-answer {
+  width: 100px;
+}
 .table-id {
   width: 50px;
 }
-
+.table-number {
+  width: 100px;
+}
 /*
 gallery.html css
 */
@@ -244,3 +253,12 @@ gallery.html css
   width: 200px;
   margin: 0 auto;
 }
+.hd_del_ta{background: #6b4a1e; font-size:14px;}
+.hd_del_ta td{background:#ffffff; padding:5px; text-align:left;line-height:35px;}
+.hd_del_ta td.hd_ta_t{background:#7cb5ec; text-align:center;color:#fff;}
+.hd_del_ta td.hd_ta_t a.left{float:left;color:#fff;margin-left:5px;}
+.hd_del_ta td.hd_ta_t a.right{float:right;color:#fff;margin-right:10px;}
+.hd_del_ta td input,.hd_del_ta td select{padding:3px 10px 3px 10px; font-size: 15px;}
+.hd_del_ta td table.optionTab{margin:0 auto;background-color: #ccc;}
+.hd_del_ta td table.optionTab td{line-height:18px;padding:5px;}
+.hd_del_ta td input.mvDown,.hd_del_ta td input.mvUp{font-size:12px;}

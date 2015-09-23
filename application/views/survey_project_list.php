@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze后台管理系统模板HTML 表格页面 - 源码之家</title>
+<title>调查问卷后台管理系统</title>
   <meta name="description" content="这是一个 table 页面">
   <meta name="keywords" content="table">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -117,23 +117,6 @@
 	<?php endforeach;?>	
           </tbody>
         </table>
-          <div class="am-cf">
-  共 3 条记录
-  <div class="am-fr">
-    <ul class="am-pagination">
-      <li class="am-disabled"><a href="#">«</a></li>
-      <li class="am-active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><a href="#">»</a></li>
-    </ul>
-  </div>
-</div>
-          <hr />
-          <p>注：.....</p>
-        </form>
       </div>
 
     </div>
@@ -154,7 +137,7 @@
 <![endif]-->
 
 <!--[if (gte IE 9)|!(IE)]><!-->
-<script src="../../assets/js/jquery.min.js"></script>
+<script src="../../assets/js/jquery.js"></script>
 <script src="../../assets/js/jquery1.11.1.min.js"></script>
 <script src="../../assets/js/amazeui.min.js"></script>
 <!--<![endif]-->

@@ -20,6 +20,10 @@ class Main extends MY_Controller {
 		$this->need_login = true;
         	parent::__construct();
 		$this->load->model('project_model');
+		$this->load->model('home_info_model');
+		$this->load->model('trip_info_model');
+		$this->load->model('user_info_model');
+		$this->load->model('trip_question_option_model');
         }
 	public function index()
 	{
@@ -35,13 +39,39 @@ class Main extends MY_Controller {
 		$this->load->view('test',$data);	
 	}
 	public function map(){
+		$pid = $this->input->get_post('id');
+		$home_list = $this->home_info_model->get_by_pid($pid);
 		$data['user'] = $this->user_info;
-                $this->load->view('map',$data);
+		$data['list'] = $home_list;
+		$data['id'] = $pid;
+                $this->load->view('map_main',$data);
         }
-	public function map1(){
+	public function map_add_trip(){
                 $data['user'] = $this->user_info;
-                $this->load->view('map1',$data);
+		$uid = $this->input->get_post('uid');
+                $user = $this->user_info_model->get_user_by_uid($uid);
+                $home_info = $this->home_info_model->get($user['home_id']);
+		$project_id = $home_info['project_id'];
+                $data['user'] = $this->user_info;
+		$data['uid'] = $uid;
+                $data['lat'] = $home_info['lat'];
+		$data['lng'] = $home_info['lng'];
+		$data['options1'] = $this->trip_question_option_model->get_by_type($project_id,1);
+                $data['options2'] = $this->trip_question_option_model->get_by_type($project_id,2);
+                $data['options3'] = $this->trip_question_option_model->get_by_type($project_id,3);
+                $this->load->view('map_add_trip',$data);
         }
+	public function map_edit_trip(){
+		$id = $this->input->get_post('id');
+		$trip_info  = $this->trip_info_model->get_by_id($id);
+		$data['options1'] = $this->trip_question_option_model->get_by_type($trip_info['project_id'],1);
+                $data['options2'] = $this->trip_question_option_model->get_by_type($trip_info['project_id'],2);
+                $data['options3'] = $this->trip_question_option_model->get_by_type($trip_info['project_id'],3);
+		$data['trip_info'] = $trip_info;
+		$data['id'] = $id;
+		$data['uid'] = $trip_info['user_id'];
+		$this->load->view('map_edit_trip',$data);
+	}
 	public function map2(){
                 $data['user'] = $this->user_info;
                 $this->load->view('map2',$data);
@@ -93,12 +123,20 @@ class Main extends MY_Controller {
 	}
 	public function  trip_info(){
 		$data['user'] = $this->user_info;
-		$this->load->view('test_trip_info',$data);
+		$id= $this->input->get_post('id');
+		$data['id'] = $id;
+		$this->load->view('edit_trip_info',$data);
 	}
 	public function  add_trip(){
+		$uid = $this->input->get_post('uid');
 		$data['user'] = $this->user_info;
+		$data['uid'] = $uid;
                 $this->load->view('test_add_trip',$data);
         }
+	public function statics(){
+		$data['user'] = $this->user_info;
+                $this->load->view('statics',$data);
+	}
 }
 
 /* End of file welcome.php */

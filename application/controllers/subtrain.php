@@ -47,6 +47,21 @@ class Subtrain extends MY_Controller {
                 $data['id'] = $pid;
                 $this->load->view('subtrain',$data);
 	}
+	public function add_ajax(){
+		$pid = $this->input->get_post('pid');
+                $station_list = $this->input->get_post('station_list');
+                $name = $this->input->get_post('name');
+                $subtrain_id = $this->subtrain_model->insert(array('pid'=>$pid,'name'=>$name));
+                $this->add_station_list($station_list,$subtrain_id);
+		$subtrain =  $this->subtrain_model->get_by_id($subtrain_id);
+                $data['subtrain'] = $subtrain;
+                $data['id'] = $pid;
+		$data['result'] = 1;
+		if(!empty($subtrain)){
+                        $data['subtrain_list'] = $this->subtrain_detail_model->get_by_subtrain_id($subtrain_id);
+                }
+		 echo json_encode($data);
+	}
 	private function add_station_list($station_list,$subtrain_id){
 		$arr = explode(';',$station_list);
                 if(!empty($arr)){
@@ -62,6 +77,7 @@ class Subtrain extends MY_Controller {
 		$pid = $this->input->get_post('pid');
                 $station_list = $this->input->get_post('station_list');
                 $name = $this->input->get_post('name');
+		$ajax=$this->input->get_post('ajax');
 		$this->subtrain_model->update($id,array('name'=>$name));
 		$subtrain =  $this->subtrain_model->get_by_id($id);
 		$option_str="";
@@ -75,12 +91,26 @@ class Subtrain extends MY_Controller {
                                 	$this->subtrain_detail_model->delete_by_id($id);
                                 	$this->add_station_list($station_list,$id);
                         	}
+			}else{
+				$this->add_station_list($station_list,$id);
 			}
                 }                
-		$subtrains =  $this->subtrain_model->get_by_pid($pid);
-                $data['subtrains'] = $subtrains;
-                $data['id'] = $pid;
-                $this->load->view('subtrain',$data);
+		if(empty($ajax)){
+			$subtrains =  $this->subtrain_model->get_by_pid($pid);
+                	$data['subtrains'] = $subtrains;
+                	$data['id'] = $pid;
+                	$this->load->view('subtrain',$data);
+		}else{
+                        $data['result'] = 1;
+			echo json_encode($data);
+		}
+	}
+	public function delete(){
+		$id = $this->input->get_post('id');
+		$this->subtrain_model->delete_by_id($id);
+		$data['result'] = 1;
+		$data['id'] = $id;
+		echo json_encode($data);
 	}
 	public function edit_subtrain(){
 		$id = $this->input->get_post('id');

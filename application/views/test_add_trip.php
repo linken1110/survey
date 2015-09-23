@@ -6,7 +6,7 @@
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze后台管理系统模板HTML首页 - 源码之家</title>
+<title>调查问卷后台管理系统</title>
   <meta name="description" content="这是一个 index 页面">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -18,15 +18,13 @@
   <link rel="stylesheet" href="../../assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="../../assets/css/admin.css">
   <link rel="stylesheet" href="../../assets/css/js_demo.css">
-  <script src="../../assets/js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../assets/js/jquery.js" type="text/javascript"></script>
 </head>
 <body>
-<?php include 'header.php';?>
-<?php include 'sidebar.php';?>
 <div class="admin-content">
      
 
-<div class="iframe_wrapper" style="margin-left: 0px;"><iframe id="js_iframe" src="/main/map1" scrolling="no"></iframe></div>
+<div class="iframe_wrapper" style="margin-left: 0px;"><iframe id="js_iframe" src="/main/map_add_trip?uid=<?php echo $uid?>" scrolling="no"></iframe></div>
   </div>
 <?php include 'footer.php';?>
 <script type="text/javascript">

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze后台管理系统模板HTML首页 - 源码之家</title>
+<title>调查问卷后台管理系统</title>
   <meta name="description" content="这是一个 index 页面">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -23,18 +23,16 @@
   以获得更好的体验！</p>
 <![endif]-->
 
-<?php include 'header.php';?>
 <div class="am-cf admin-main">
-<?php include 'sidebar.php';?>
   <!-- content start -->
 <!-- content start -->
   <div class="admin-content">
-
     <div class="am-cf am-padding">
       <div style="text-align:center"><strong class="am-text-primary am-text-lg"></strong> </div>
     </div>
-	<form action="hueditSub" id="qeditsub" method="post">
-							<input type="hidden" value="" name="id">
+	<form action="/survey_result/update_home_info" id="myform" method="post">
+							<input type="hidden" value="<?php echo $info['id']?>" name="id" id ="id">
+							<input type="hidden" value="" name="answer_list" id="answer_list">
 							<table class="hd_del_ta  am-table-striped am-table-hover table-main" id="table1" align="center" border="0" cellpadding="0" cellspacing="1" width="97%">
 								<tbody>
 									<tr>
@@ -43,213 +41,43 @@
 								</tbody>
 								<tbody><tr>
 									<td>现在住户地址:</td>
-									<td><input name="address" value="南苑弄23号2单元603"></td>
-								</tr>
-								<tr>
-									<td>五年前地址</td>
-									<td><input name="faddress" value="与现住址相同"></td>
+									<td><input name="address" id="address" value="<?php echo $info['address']?>"></td>
 								</tr>
 								<tr>
 									<td>经度:</td>
-									<td><input name="lng" readonly="readonly" value="120.274796"><a href="javascript:getLngLat(2);">选择经纬度</a>
+									<td><input name="lng" id="lng" readonly="readonly" value="<?php echo $info['lng']?>"><a href="javascript:getLngLat(2);">选择经纬度</a>
 									</td>
 								</tr>
 								<tr>
 									<td>纬度:</td>
-									<td><input name="lat" readonly="readonly" value="30.159739"><a href="javascript:getLngLat(1);">选择经纬度</a></td>
+									<td><input name="lat" id="lat" readonly="readonly" value="<?php echo $info['lat']?>"><a href="javascript:getLngLat(1);">选择经纬度</a></td>
 								</tr>
-								
-									<tr>
-										<td>家庭总人口<input name="itemid" value="130" type="hidden"></td>
-										<td>
-												<input name="item_value" value="3">
-											  
-										</td>
+								<?php foreach ($list as $item):?>
+									<?php if($item['type'] == 1 || $item['type'] == 4){?>
+									<tr><td><?php echo $item['question']?></td>
+									<td><input name="<?php echo $item['number']?>" class="question" value="<?php echo $item['answer']?>">
 									</tr>
+									<?php }else if($item['type'] == 2){?>
+										<tr>
+                                                                                <td><?php echo $item['question']?></td>
+										<td><select name="<?php echo $item['id']?>" class="question">
+											<?php foreach ($item['option_list'] as $option):?>
+												<?php if($item['answer'] == $option['number'] ){?>
+												<option selected="selected" value="<?php echo $option['number']?>"><?php echo $option['content']?></option>                         
+												<?php }else {?>
+												<option value="<?php echo $option['number']?>"><?php echo $option['content']?></option>				
+												<?php }?>
+											<?php endforeach;?>
+									<?php }else if($item['type'] == 3){?>
+
+
+									<?php }?>
+								<?php endforeach;?>
 								
-									<tr>
-										<td>其中不满6周岁<input name="itemid" value="131" type="hidden"></td>
-										<td>
-												<input name="item_value" value="0">
-											  
-										</td>
-									</tr>
 								
-									<tr>
-										<td>本市户籍人口<input name="itemid" value="132" type="hidden"></td>
-										<td>
-												<input name="item_value" value="3">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>其中不满6周岁<input name="itemid" value="133" type="hidden"></td>
-										<td>
-												<input name="item_value" value="0">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>居住满6个月<input name="itemid" value="134" type="hidden"></td>
-										<td>
-												<input name="item_value" value="">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>其中不满6周岁<input name="itemid" value="135" type="hidden"></td>
-										<td>
-												<input name="item_value" value="">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>居住不满6个月<input name="itemid" value="136" type="hidden"></td>
-										<td>
-												<input name="item_value" value="">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>其中不满6周岁<input name="itemid" value="137" type="hidden"></td>
-										<td>
-												<input name="item_value" value="">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>住房性质<input name="itemid" value="138" type="hidden"></td>
-										<td> 
-												<select name="item_value">
-													
-														<option selected="selected" value="自有住房">自有住房</option>
-													
-														<option value="租（借）房屋">租（借）房屋</option>
-													
-														<option value="雇主提供">雇主提供</option>
-													
-														<option value="其他">其他</option>
-													
-												</select>
-											 
-										</td>
-									</tr>
-								
-									<tr>
-										<td>小 汽 车<input name="itemid" value="139" type="hidden"></td>
-										<td>
-												<input name="item_value" value="1">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>摩 托 车<input name="itemid" value="140" type="hidden"></td>
-										<td>
-												<input name="item_value" value="0">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>电动自行车<input name="itemid" value="141" type="hidden"></td>
-										<td>
-												<input name="item_value" value="1">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>自 行 车<input name="itemid" value="142" type="hidden"></td>
-										<td>
-												<input name="item_value" value="1">
-											  
-										</td>
-									</tr>
-								
-									<tr>
-										<td>家庭年收入<input name="itemid" value="146" type="hidden"></td>
-										<td> 
-												<select name="item_value">
-													
-														<option value="10 万及以下 (包括10万)">10 万及以下 (包括10万)</option>
-													
-														<option selected="selected" value="10~30 万(包括30万)">10~30 万(包括30万)</option>
-													
-														<option value="30~50 万 (包括50万)">30~50 万 (包括50万)</option>
-													
-														<option value="50~100 万(包括100万)">50~100 万(包括100万)</option>
-													
-														<option value="100 万以上">100 万以上</option>
-													
-												</select>
-											 
-										</td>
-									</tr>
-								
-									<tr>
-										<td>家庭住房市场单价<input name="itemid" value="171" type="hidden"></td>
-										<td> 
-												<select name="item_value">
-													
-														<option value="<1 万/ ㎡">&lt;1 万/ ㎡</option>
-													
-														<option selected="selected" value="1~1.5 万/ ㎡(包括1万)">1~1.5 万/ ㎡(包括1万)</option>
-													
-														<option value="1.5~2 万/ ㎡(包括1.5万)">1.5~2 万/ ㎡(包括1.5万)</option>
-													
-														<option value="2~3 万/ ㎡(包括2万)">2~3 万/ ㎡(包括2万)</option>
-													
-														<option value=">=3 万/ ㎡">&gt;=3 万/ ㎡</option>
-													
-												</select>
-											 
-										</td>
-									</tr>
-								
-									<tr>
-										<td>是否有购车计划<input name="itemid" value="172" type="hidden"></td>
-										<td> 
-												<select name="item_value">
-													
-														<option selected="selected" value="打算买车">打算买车</option>
-													
-														<option value="不打算买车">不打算买车</option>
-													
-												</select>
-											 
-										</td>
-									</tr>
-								
-									<tr>
-										<td>购买车的目的<input name="itemid" value="173" type="hidden"></td>
-										<td>  
-												<div>
-													<input name="item_value" type="hidden" value="上下班使用,自驾游">
-													
-														<input type="checkbox" checked="checked" value="上下班使用" onchange="getVal(this)">上下班使用 
-								                 				
-														<input type="checkbox" value="接送孩子" onchange="getVal(this)">接送孩子 
-								                 				
-														<input type="checkbox" value="平时购物" onchange="getVal(this)">平时购物 
-								                 				
-														<input type="checkbox" checked="checked" value="自驾游" onchange="getVal(this)">自驾游 
-								                 				
-														<input type="checkbox" value="其它" onchange="getVal(this)">其它 
-								                 				
-												</div>
-											
-										</td>
-									</tr>
 								
 							</tbody></table>
-							<button type="button" class="am-btn am-btn-primary am-btn-xs" style="margin-left:400px;margin-top:10px;margin-bottom:10px;">提交保存</button>
+							<button type="button" class="am-btn am-btn-primary am-btn-xs" style="margin-left:400px;margin-top:10px;margin-bottom:10px;" onclick="mysubmit();">提交保存</button>
 						</form>
 
   </div>
@@ -262,18 +90,44 @@
   <hr>
 </footer>
 
-<!--[if lt IE 9]>
-<script src="../../assets/js/jquery1.11.1.min.js"></script>
-<script src="../../assets/js/modernizr.js"></script>
-<script src="../../assets/js/polyfill/rem.min.js"></script>
-<script src="../../assets/js/polyfill/respond.min.js"></script>
-<script src="../../assets/js/amazeui.legacy.js"></script>
-<![endif]-->
 
 <!--[if (gte IE 9)|!(IE)]><!-->
-<script src="../../assets/js/jquery.min.js"></script>
+<script src="../../assets/js/jquery.js"></script>
 <script src="../../assets/js/amazeui.min.js"></script>
 <!--<![endif]-->
 <script src="../../assets/js/app.js"></script>
+<script type="text/javascript">
+function mysubmit(){
+        var answer_list = "";
+        $(".question").each(function(){
+                var content = $(this).val();
+                var num = $(this).attr("name");
+                answer_list = answer_list + num +":" +content +";";
+        });
+        $("#answer_list").val(answer_list);
+
+	var address = $("#address").val();
+	var lng = $("#lng").val();
+	var lat = $("#lat").val();
+	var id = $("#id").val();
+	$.ajax({
+                type: 'POST',
+                url: "/survey_result/update_home_info",
+                data: {id:id,answer_list:answer_list,lng:lng,lat:lat,address:address},
+                dataType: 'json',
+                success: function(result){
+                        if(result['result'] ){
+				alert("保存成功");
+                        }
+                },
+                error: function(){
+                        alert('Error loading PHP document');
+
+                }
+        });
+
+//	$("#myform").submit();
+}
+</script>
 </body>
 </html>

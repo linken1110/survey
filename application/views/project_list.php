@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze后台管理系统模板HTML 表格页面 - 源码之家</title>
+<title>调查问卷后台管理系统</title>
   <meta name="description" content="这是一个 table 页面">
   <meta name="keywords" content="table">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -14,6 +14,7 @@
   <meta name="apple-mobile-web-app-title" content="Amaze UI" />
   <link rel="stylesheet" href="../../assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="../../assets/css/admin.css">
+ <link rel="stylesheet" href="../../assets/css/font-awesome.min.css">
 </head>
 <body>
 <!--[if lte IE 9]>
@@ -40,8 +41,8 @@
               <button type="button" class="am-btn am-btn-default" onclick="window.location.href='/project/add_project'"><span class="am-icon-plus"></span> 新增</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
             </div>
-
-            <div class="am-form-group am-margin-left am-fl">
+            <div class="am-form-group am-margin-left am-fl" >
+	<!--
 		省份
 		<select name = "province" id= "province">
                 <option value="北京">北京</option>
@@ -76,14 +77,38 @@
                 <option value="福建">福建</option>
                 <option value="内蒙古">内蒙古</option>
               </select>
+		-->
+		<input type="text" class="am-form-field" placeholder="省份" name="province" style="width:139px;height:37px;margin-left:145px;">
             </div>
-          </div>
+      </div>
         </div>
       </div>
       <div class="am-u-md-3 am-cf">
         <div class="am-fr">
           <div class="am-input-group am-input-group-sm">
-            <input type="text" class="am-form-field" placeholder="年份" name="search_time">
+	<div id="demo_box" >
+            <div class="pop_ctrl" style="cursor: default;"><i class="fa fa-bars" style="display:none"></i></div>
+            <ul id="demo_ul" style="display: none; position: absolute;  margin-top:5px; margin-left: 0px; width: 300px; float: left; padding: 0px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; background: rgb(52, 73, 94); z-index:100;">
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2008);"><div style="margin-top:25px;font-size:22px;">2008</div></a></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2009);"><div style="margin-top:25px;font-size:22px;
+">2009</div></a></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2010);"><div style="margin-top:25px;font-size:22px;
+">2010</div></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2011);"><div style="margin-top:25px;font-size:22px;
+">2011</div></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2012);"><div style="margin-top:25px;font-size:22px;
+">2012</div></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2013);"><div style="margin-top:25px;font-size:22px;
+">2013</div></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2014);"><div style="margin-top:25px;font-size:22px;
+">2014</div></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2015);"><div style="margin-top:25px;font-size:22px;
+">2015</div></li>
+                <li class="demo_li" style="display: block;  float: left; width: 80px; height: 80px;text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" onclick="changeyear(2016);"><div style="margin-top:25px;font-size:22px;
+">2016</div></li>
+            </ul>
+        </div>
+            <input type="text" class="am-form-field" placeholder="年份" name="search_time" id="year" onfocus="popup();">
                 <span class="am-input-group-btn">
                   <button class="am-btn am-btn-default" type="button" onclick="submit();" >搜索</button>
                 </span>
@@ -114,7 +139,7 @@
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
                     <button class="am-btn am-btn-default am-btn-xs am-text-secondary" type="button" onclick="window.location.href='/project/edit_project?id=<?php echo $item['id']?>'"><span class="am-icon-pencil-square-o"></span> 编辑</button>
-                    <button class="am-btn am-btn-default am-btn-xs am-text-danger" type="button" onclick="window.location.href='/project/delete_project?id=<?php echo $item['id']?>'"><span class="am-icon-trash-o"></span> 删除</button>
+                    <button class="am-btn am-btn-default am-btn-xs am-text-danger" type="button" onclick="delete_item(<?php echo $item['id']?>)"><span class="am-icon-trash-o"></span> 删除</button>
 		    <button type="button" class="am-btn am-btn-default" onclick="window.location.href='/project_member/member_list?id=<?php echo $item['id']?>'"><span class="am-icon-copy"></span> 项目成员</button>
 			<button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="window.location.href='/question/category_list?id=<?php echo $item['id']?>'"><span class="am-icon-check"></span>问卷管理</button>
                   </div>
@@ -124,23 +149,6 @@
 	<?php endforeach;?>	
           </tbody>
         </table>
-          <div class="am-cf">
-  共 3 条记录
-  <div class="am-fr">
-    <ul class="am-pagination">
-      <li class="am-disabled"><a href="#">«</a></li>
-      <li class="am-active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><a href="#">»</a></li>
-    </ul>
-  </div>
-</div>
-          <hr />
-          <p>注：.....</p>
-        </form>
       </div>
 
     </div>
@@ -161,15 +169,35 @@
 <![endif]-->
 
 <!--[if (gte IE 9)|!(IE)]><!-->
-<script src="../../assets/js/jquery.min.js"></script>
+<script src="../../assets/js/jquery.js"></script>
 <script src="../../assets/js/jquery1.11.1.min.js"></script>
 <script src="../../assets/js/amazeui.min.js"></script>
 <!--<![endif]-->
 <script src="../../assets/js/app.js"></script>
+<script src="../../assets/js/My97DatePicker/WdatePicker.js"></script>
+<script src="../../assets/js/popupmenu/js/jquery.popmenu.js"></script>
 <script type="text/javascript">
+$(function(){    
+	$('#year').popmenu();    
+	$('#demo_box').popmenu({'background':'#e6e6e6','focusColor':'#c7c7c7','borderRadius':'0','iconSize':'80px'});    
+})    
+	function popup(){
+		$('.pop_ctrl').click();
+	}
 	function submit(){
         	$("#my_form").submit();
 	}
+	function changeyear(year){
+		$('#demo_ul').hide();
+		$("#year").val(year);
+	}
+WdatePicker({eCont:'div1',onpicked:function(dp){alert('你选择的日期是:'+dp.cal.getDateStr())}});
+function delete_item(id){
+	if(confirm("确定要删除吗？"))
+	{
+		window.location.href="/project/delete_project?id="+id;
+	}
+}
 </script>
 </body>
 </html>

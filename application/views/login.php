@@ -6,114 +6,101 @@ http-equiv="X-UA-Compatible">
  
 <META http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 <TITLE>登录页面</TITLE> 
-<SCRIPT src="../../assets/js/jquery.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="../../assets/js/jquery.js" type="text/javascript"></SCRIPT>
  
 <STYLE>
 body{
-	background: #ebebeb;
-	font-family: "Helvetica Neue","Hiragino Sans GB","Microsoft YaHei","\9ED1\4F53",Arial,sans-serif;
-	color: #222;
-	font-size: 12px;
+	background-image:url('../images/login/bg.jpg');
 }
-*{padding: 0px;margin: 0px;}
-.top_div{
-	background: #008ead;
+
+.lg-container{
+	width:275px;
+	margin:100px auto;
+	padding:20px 40px;
+	border:1px solid #f4f4f4;
+	background:url('../images/login/bg_x.jpg');
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
+	
+	-webkit-box-shadow: 0 0 2px #aaa;
+	-moz-box-shadow: 0 0 2px #aaa;
+	box-shadow: 0 0 2px #aaa;
+}
+.lg-container h1{
+	font-size:40px;
+	text-align:center;
+}
+#lg-form > div {
+	margin:10px 5px;
+	padding:0px 0;
+}
+#lg-form label{
+	display: none;
+	font-size: 20px;
+	line-height: 25px;
+}
+#lg-form input[type="text"],
+#lg-form input[type="password"]{
+	border:1px solid rgba(51,51,51,.5);
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
+	padding: 5px;
+	font-size: 16px;
+	line-height: 20px;
 	width: 100%;
-	height: 400px;
+	text-align:center;
 }
-.ipt{
-	border: 1px solid #d3d3d3;
-	padding: 10px 10px;
-	width: 290px;
-	border-radius: 4px;
-	padding-left: 35px;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s
+#lg-form div:nth-child(3) {
+	text-align:center;
 }
-.ipt:focus{
-	border-color: #66afe9;
-	outline: 0;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+#lg-form button{
+	font-size: 18px;
+	border:1px solid #000;
+	padding:5px 10px;
+	border:1px solid rgba(51,51,51,.5);
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
+	width:200px;
+	-webkit-box-shadow: 2px 1px 1px #aaa;
+	-moz-box-shadow: 2px 1px 1px #aaa;
+	box-shadow: 2px 1px 1px #aaa;
+	cursor:pointer;
+	color:white;
+	background:darkseagreen;
+}
+#lg-form button:active{
+	-webkit-box-shadow: 0px 0px 1px #aaa;
+	-moz-box-shadow: 0px 0px 1px #aaa;
+	box-shadow: 0px 0px 1px #aaa;
+}
+#lg-form button:hover{
+//	background:#f4f4f4;
+}
+#message{width:100%;text-align:center}
+.success {
+	color: green;
+}
+.error {
+	color: red;
 }
 .u_logo{
-	background: url("../images/username.png") no-repeat;
-	padding: 10px 10px;
-	position: absolute;
-	top: 43px;
-	left: 40px;
+        background: url("../images/username.png") no-repeat;
+        padding: 10px 10px;
+        position: absolute;
+        top: 43px;
+        left: 20px;
 
 }
 .p_logo{
-	background: url("../images/password.png") no-repeat;
-	padding: 10px 10px;
-	position: absolute;
-	top: 12px;
-	left: 40px;
+        background: url("../images/password.png") no-repeat;
+        padding: 10px 10px;
+        position: absolute;
+        top: 12px;
+        left: 20px;
 }
-a{
-	text-decoration: none;
-}
-.tou{
-	background: url("../images/tou.png") no-repeat;
-	width: 97px;
-	height: 92px;
-	position: absolute;
-	top: -87px;
-	left: 140px;
-}
-.left_hand{
-	background: url("../images/left_hand.png") no-repeat;
-	width: 32px;
-	height: 37px;
-	position: absolute;
-	top: -38px;
-	left: 150px;
-}
-.right_hand{
-	background: url("../images/right_hand.png") no-repeat;
-	width: 32px;
-	height: 37px;
-	position: absolute;
-	top: -38px;
-	right: -64px;
-}
-.initial_left_hand{
-	background: url("../images/hand.png") no-repeat;
-	width: 30px;
-	height: 20px;
-	position: absolute;
-	top: -12px;
-	left: 100px;
-}
-.initial_right_hand{
-	background: url("../images/hand.png") no-repeat;
-	width: 30px;
-	height: 20px;
-	position: absolute;
-	top: -12px;
-	right: -112px;
-}
-.left_handing{
-	background: url("../images/left-handing.png") no-repeat;
-	width: 30px;
-	height: 20px;
-	position: absolute;
-	top: -24px;
-	left: 139px;
-}
-.right_handinging{
-	background: url("../images/right_handing.png") no-repeat;
-	width: 30px;
-	height: 20px;
-	position: absolute;
-	top: -21px;
-	left: 210px;
-}
-
 </STYLE>
      
 <SCRIPT type="text/javascript">
@@ -145,34 +132,60 @@ $(function(){
 		$("#right_hand").attr("style","right:-112px;top:-12px");
 	});
 });
+$(document).ready(function(){
+		$("#login").click(function(){
+			
+			var action = $("#lg-form").attr('action');
+			var form_data = {
+				username: $("#username").val(),
+				password: $("#password").val(),
+				is_ajax: 1
+			};
+			
+			$.ajax({
+				type: "POST",
+				url: action,
+				data: form_data,
+				success: function(response)
+				{
+					if(response == "success")
+						$("#lg-form").slideUp('slow', function(){
+							$("#message").html('<p class="success">You have logged in successfully!</p><p>Redirecting....</p>');
+						});
+					else
+						$("#message").html('<p class="error">ERROR: Invalid username and/or password.</p>');
+				}	
+			});
+			return false;
+		});
+	});
 </SCRIPT>
  
 <META name="GENERATOR" content="MSHTML 11.00.9600.17496"></HEAD> 
 <BODY>
-<DIV class="top_div"></DIV>
-<form name="loginForm" id="loginForm" method="post" action="/login/do_login">
-<DIV style="background: rgb(255, 255, 255); margin: -100px auto auto; border: 1px solid rgb(231, 231, 231); border-../image: none; width: 400px; height: 210px; text-align: center;">
-<DIV style="width: 165px; height: 96px; position: absolute;">
-<DIV class="tou"></DIV>
-<DIV class="initial_left_hand" id="left_hand"></DIV>
-<DIV class="initial_right_hand" id="right_hand"></DIV></DIV>
-<P style="padding: 30px 0px 10px; position: relative;"><SPAN class="u_logo"></SPAN>      
-   <INPUT class="ipt" id = "name" name="name" type="text" placeholder="请输入用户名" value=""> 
+	<div class="lg-container">
+		<h1> <img src="../images/login/logo.png" style="height:80px;"></h1>
+		<form  id="lg-form" name="lg-form" action="/login/do_login" method="post">
+			
+			<div>
+				<P style="padding: 30px 0px 10px; position: relative;"><SPAN class="u_logo"></SPAN>
+   <INPUT class="ipt" id = "name" name="name" type="text" placeholder="请输入用户名" value="">
     </P>
-<P style="position: relative;"><SPAN class="p_logo"></SPAN>         
-<INPUT class="ipt" id="password" name = "password" type="password" placeholder="请输入密码" value="">   
+			</div>
+			
+			<div>
+				<P style="position: relative;"><SPAN class="p_logo"></SPAN>
+<INPUT class="ipt" id="password" name = "password" type="password" placeholder="请输入密码" value="">
   </P>
-<p id="error_message" style="display:none;"><span id="message_value" style="color:red;font-size:14px;"></span></p>
-<DIV style="height: 50px; line-height: 50px; margin-top: 30px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
-<P style="margin: 0px 35px 20px 45px;"><SPAN style="float: left;"><A style="color: rgb(204, 204, 204);" 
-href="#">忘记密码?</A></SPAN> 
-           <SPAN style="float: right;"><A style="color: rgb(204, 204, 204); margin-right: 10px;" 
-href="#">注册</A>  
-              <A style="background: rgb(0, 142, 173); padding: 7px 10px; border-radius: 4px; border: 1px solid rgb(26, 117, 152); border-../image: none; color: rgb(255, 255, 255); font-weight: bold; cursor:pointer;" onclick="check_submit();">登录</A> 
-           </SPAN>         </P></DIV></DIV>
-</form>
-		   <div style="text-align:center;">
-</div>
+			</div>
+			
+			<div>				
+				<button type="submit" id="login"  onclick="check_submit();">登录</button>
+			</div>
+			
+		</form>
+		<p id="error_message" style="display:none;"><span id="message_value" style="color:red;font-size:14px;"></span></p>
+	</div>
 </BODY>
 <script type="text/javascript">
 	function check_submit(){
@@ -186,7 +199,7 @@ href="#">注册</A>
                         $("#error_message").show();
 		}else{
 			$("#error_message").hide();
-			$("#loginForm").submit();	
+			$("#lg-form").submit();	
 		}
 	}
 </script>

@@ -27,6 +27,8 @@ class Question extends MY_Controller {
 		$this->load->model('question_option_model');
 		$this->load->model('trip_question_option_model');
 		$this->load->model('survey_trip_question_model');
+		$this->load->model('subtrain_model');
+                $this->load->model('subtrain_detail_model');
         }
 	public function quest_list(){
 		$id = $this->input->get_post('id');
@@ -38,11 +40,12 @@ class Question extends MY_Controller {
 		$result = array();
 		if(!empty($list)){
 			foreach($list as $tmp){
-				$question = $this->question_model->get_by_id($tmp['question_id']);
+				$question = $this->get_question($tmp['question_id']);
 				$result[] = $question;
 			}
 		}
 		$data['id'] = $id;
+		$data['category_id'] = $category_id;
 		$data['category'] = $this->category_model->get_by_id($category_id);
 		$data['list'] = $result;
 		$data['user'] = $this->user_info;
@@ -56,6 +59,19 @@ class Question extends MY_Controller {
 			$data['options1'] = $this->trip_question_option_model->get_by_type($id,1);
                         $data['options2'] = $this->trip_question_option_model->get_by_type($id,2);
                         $data['options3'] = $this->trip_question_option_model->get_by_type($id,3);
+			$subtrain_list = array();
+			$subtrains =  $this->subtrain_model->get_by_pid($id);
+			if(!empty($subtrains)){
+				foreach($subtrains as $train){
+					$subtrain = $this->subtrain_detail_model->get_by_subtrain_id($train['id']);
+					
+					$tmp['name'] = $train['name'];
+					$tmp['list'] = $subtrain;
+					$tmp['id'] = $train['id'];
+					$subtrain_list[] = $tmp;
+				}
+			}
+                	$data['subtrain_list'] = $subtrain_list;
 			$this->load->view('trip_quest_list',$data);
 		}else{
 			$this->load->view('quest_list',$data);
@@ -68,6 +84,15 @@ class Question extends MY_Controller {
 		$this->survey_question_model->delete_by_question_id($id);
                 $category_id = $this->input->get_post('category_id');
                 $this->get_quest_list($pid,$category_id);	
+	}
+	public function delete_question_ajax(){
+		$id = $this->input->get_post('id');
+                $pid = $this->input->get_post('pid');
+                $this->question_model->delete_by_id($id);
+                $result = $this->survey_question_model->delete_by_question_id($id);
+		$data['result'] = $result;
+		$data['id'] =  $id ;
+		echo json_encode($data);
 	}
 	public function category_list(){
 		$id = $this->input->get_post('id');
@@ -96,6 +121,11 @@ class Question extends MY_Controller {
 		$data['list'] = $result;
 		$data['pid'] = $id;
 		$this->load->view('category_list',$data);
+	}
+	public function get_question_detail(){
+		$id = $this->input->get_post('id');
+		$data = $this->get_question($id);
+		echo json_encode($data);
 	}
 	private function get_question($question_id){
                         $data = array();
@@ -198,6 +228,31 @@ class Question extends MY_Controller {
                                 $this->add_trip_option_list($options,$id,$type);
                         }
 	}
+	public function update_ajax(){
+		$id = $this->input->get_post('id');
+                $pid = $this->input->get_post('pid');
+                $question = $this->input->get_post('question');
+                $type = $this->input->get_post('type');
+                $options = $this->input->get_post('option_list');
+                $default = $this->input->get_post('default');
+                $option_str ="";
+                if($type == 2 || $type == 3){
+                        $option_list = $this->question_option_model->get_by_questionid($id);
+                        if(!empty ($option_list)){
+                                foreach($option_list as $option){
+                                        $option_str = $option_str.$option['number'].":".$option['content'].";";
+                                }
+                        }
+                        if($options !== $option_str){
+                                $this->question_option_model->delete_by_questionid($id);
+                                $this->add_option_list($options,$id);
+                        }
+                }
+                $result = $this->question_model->update($id,array('type'=>$type,'question'=>$question,'default_value' =>$default));
+		$data['result'] = 1;
+		$data['question'] = $this->get_question($id);
+		echo json_encode($data);
+	}
 	public function update(){
 		$id = $this->input->get_post('id');
 		$pid = $this->input->get_post('pid');
@@ -296,6 +351,57 @@ class Question extends MY_Controller {
                 $data['list'] = $result;
                 $data['user'] = $this->user_info;
                 $this->load->view('quest_list',$data);
+	}
+	public function add_ajax(){
+		$id = $this->input->get_post('pid');
+                $type = $this->input->get_post('type');
+                $category_id = $this->input->get_post('category_id');
+                $question = $this->input->get_post('question');
+                $options = $this->input->get_post('option_list');
+                $default = $this->input->get_post('default_value');
+		$time = date("Y-m-d H:i:s", time());
+                $question_id = $this->question_model->insert(array('type'=>$type,'category_id'=>$category_id,'question'=>$question,'default_value'=>$default,'update_date'=>$time));
+                if($type == 2 || $type == 3){
+                        $this->add_option_list($options,$question_id);
+                }
+                $num = $this->survey_question_model->get_max_number($id);
+                if(empty($num)){
+                        $number = 1;
+                }else{
+                        $number = $num['number'] + 1;
+                }
+                $result = $this->survey_question_model->insert(array('survey_id'=>$id,'category_id'=>$category_id,'question_id'=>$question_id,'number'=>$number,'update_date'=>$time));
+		$data['result']= $result;
+		echo json_encode($data);
+	}
+	public function resort(){
+		$pid = $this->input->get_post('pid');
+                $category_id = $this->input->get_post('category_id');
+		$question_list = $this->input->get_post('question_list');
+		$my_list = "";
+		$list  = $this->survey_question_model->get_by_condition(array('survey_id'=>$pid,'category_id'=>$category_id));
+                if(!empty($list)){
+                        foreach($list as $tmp){
+				$my_list = $my_list.$tmp['question_id'].";";
+                        }
+                }
+		if($question_list != $my_list){
+			$arr = explode(';',$question_list);
+                        if(!empty($arr)){
+				$index = 0;
+                        	foreach($arr as $tmp){
+					if(!empty($tmp)){
+						if($tmp != $list[$index]['question_id']){
+							$this->survey_question_model->update($tmp,array('number'=>$list[$index]['number']));
+						}
+						$index ++;
+					}
+					
+				}
+			}
+		}
+		$data['result'] = 1;
+                echo json_encode($data);
 	}
 }
 

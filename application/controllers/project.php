@@ -24,7 +24,12 @@ class Project extends MY_Controller {
 		$this->load->model('project_category_model');
         }
 	public function project_list(){
-		$data['user'] = $this->user_info;
+		$user = $data['user'] = $this->user_info;
+		if($user['position'] == 1){
+			$project = $this->project_model->get_by_id($user['project']);
+			redirect("/question/category_list?id=".$project['id'], 'refresh');
+			return;
+		}
 		$data['list'] = $this->project_model->get_all();
 		$this->load->view('project_list',$data);
 	}

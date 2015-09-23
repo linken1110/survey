@@ -7,7 +7,7 @@ class Update extends MY_Controller{
 		$this->load->model('app_version_model');
 	}
 	public function check_update(){
-		$data = array('status_code'=>0,'verson'=>0,'apkurl'=>'');
+		$data = array('status_code'=>0,'version'=>0,'apkurl'=>'');
 		$version = $this->input->get_post('version');
 		if(empty($version))
                 {

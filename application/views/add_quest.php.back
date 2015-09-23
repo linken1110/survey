@@ -1,0 +1,225 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Amaze后台管理系统模板HTML首页 - 源码之家</title>
+  <meta name="description" content="这是一个 index 页面">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="../../assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="../../assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <link rel="stylesheet" href="../../assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="../../assets/css/admin.css">
+ <link rel="stylesheet" href="../../assets/css/admin.css">
+  <link rel="stylesheet" href="../../assets/css/js_demo.css">
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+
+<?php include 'header.php';?>
+<div class="am-cf admin-main">
+<?php include 'sidebar.php';?>
+  <!-- content start -->
+	<div class="admin-content">
+
+  <div class="am-cf am-padding">
+    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">增加题目</strong> </div>
+  </div>
+
+  <div class="am-tabs am-margin" data-am-tabs>
+    <ul class="am-tabs-nav am-nav am-nav-tabs">
+ <li class="am-active"><a href="#tab1">基本信息</a></li>
+    <!--  <li id="totab3" style="display:none;"><a href="#tab3">选项</a></li>-->
+    </ul>
+
+<div class="am-tabs-bd">
+      <div class="am-tab-panel am-fade am-in am-active" id="tab1">
+	<form class="am-form" action="/question/add" id="my_form" method="post">
+	<input type="hidden" value="<?php echo $project['id']?>" name="pid" />
+                <input type="hidden" name="category_id" value="<?php echo $category['id']?>" >
+	<input type="hidden" value="1" name="type" id="type" />
+	<input type="hidden" value="" name="option_list" id="option_list" />
+        <div class="am-g am-margin-top">
+          <div class="am-u-sm-2 am-text-right">所属项目</div>
+          <div class="am-u-sm-10" style="width:270px">
+		<input type="text" name="" value="<?php echo $project['name']?>" class="am-form-field am-input-sm" style="float:none">
+          </div>
+        </div>
+	 <div class="am-g am-margin-top">
+          <div class="am-u-sm-2 am-text-right">题目分类</div>
+          <div class="am-u-sm-10" style="width:270px">
+            <select  name = "category" id= "category" disabled="true">
+              <option value="1">住户基本特征情况</option>
+              <option value="2">个人基本特征情况</option>
+              <option value="3">个人意愿调查</option>
+	      <option value="4">出行链调查</option>
+            </select>
+          </div>
+        </div>
+        <div class="am-g am-margin-top">
+          <div class="am-u-sm-2 am-text-right">题目类型</div>
+          <div class="am-u-sm-10">
+            <div class="am-btn-group" data-am-button>
+              <label class="am-btn am-btn-default am-btn-xs" onclick="change(1);">
+                <input type="radio" name="options" > 填空题
+              </label>
+              <label class="am-btn am-btn-default am-btn-xs" onclick="change(2);"> 
+                <input type="radio" name="options" > 选择题
+              </label>
+              <label class="am-btn am-btn-default am-btn-xs" onclick="change(3);">
+                <input type="radio" name="options"  > 多选题
+              </label>
+		<label class="am-btn am-btn-default am-btn-xs" onclick="change(4);">
+                <input type="radio" name="options" > 位置题
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="am-g am-margin-top">
+          <div class="am-u-sm-2 am-text-right">
+            题目内容
+          </div>
+          <div class="am-u-sm-10" style="width:270px">
+              <div class="am-form-group am-form-icon">
+                <input type="text" class="am-form-field am-input-sm" name="question">
+              </div>
+          </div>
+        </div>
+	<div class="am-g am-margin-top">
+          <div class="am-u-sm-2 am-text-right">
+            默认值
+          </div>
+          <div class="am-u-sm-10" style="width:270px">
+              <div class="am-form-group am-form-icon">
+                <input type="text" class="am-form-field am-input-sm" name="default_value">
+              </div>
+          </div>
+        </div>
+	<div id ="tab3" style="display:none;">
+	<form class="am-form">
+	<div id = "tab4"></div>
+	<div class="am-g am-margin-top-sm">
+            <div class="am-u-sm-2 am-text-right">
+              选项编号
+            </div>
+            <div class="am-u-sm-4 am-u-end" style="width:270px">
+              <input type="text" class="am-input-sm" id="number">
+            </div>
+          </div>
+
+          <div class="am-g am-margin-top-sm">
+            <div class="am-u-sm-2 am-text-right">
+              选项内容
+            </div>
+            <div class="am-u-sm-4 am-u-end" style="width:270px">
+              <input type="text" class="am-input-sm" id="content">
+            </div>
+          </div>
+	</form>
+	</div>
+</form>
+  </div>
+<!--         <div class="am-tab-panel am-fade" id="tab3">
+		<form class="am-form">
+          <div class="am-g am-margin-top-sm">
+            <div class="am-u-sm-2 am-text-right">
+              选项编号
+            </div>
+            <div class="am-u-sm-4 am-u-end">
+              <input type="text" class="am-input-sm" id="number">
+            </div>
+          </div>
+
+          <div class="am-g am-margin-top-sm">
+            <div class="am-u-sm-2 am-text-right">
+              选项内容
+            </div>
+            <div class="am-u-sm-4 am-u-end">
+              <input type="text" class="am-input-sm" id="content">
+            </div>
+          </div>
+		</form>
+      </div>
+--> 
+ <div class="am-margin">
+    <button type="button" class="am-btn am-btn-primary am-btn-xs" onclick="submit();">提交保存</button>
+    <button type="button" class="am-btn am-btn-primary am-btn-xs" onclick="location.reload(false);">放弃保存</button>
+   <button type="button" class="am-btn am-btn-primary am-btn-xs" onclick="add_option();">新增选项</button>
+  </div>
+</div>
+  <!-- content end -->
+
+</div>
+
+<footer>
+  <hr>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="../../assets/js/jquery1.11.1.min.js"></script>
+<script src="../../assets/js/modernizr.js"></script>
+<script src="../../assets/js/polyfill/rem.min.js"></script>
+<script src="../../assets/js/polyfill/respond.min.js"></script>
+<script src="../../assets/js/amazeui.legacy.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="../../assets/js/jquery.min.js"></script>
+<script src="../../assets/js/amazeui.min.js"></script>
+<!--<![endif]-->
+<script src="../../assets/js/app.js"></script>
+<script type="text/javascript">
+$(function(){
+        var chkData = "<?php echo $category['id']?>";
+        $('#category option').each(function(){
+                var self = $(this);
+                var selfVal = self.val();
+                if(selfVal == chkData) 
+                {
+                        self.attr('selected' , 'true');
+                }
+        });
+});
+function change(i){
+	$("#type").val(i);
+	if(i == 2 || i ==3){
+		$("#tab3").show();
+	}else{
+		$("#tab3").hide();
+	}
+}
+function add_option(){
+	var num = $("#number").val();
+	var content = $("#content").val();
+	$("#number").val("");
+	$("#content").val("");
+	if(!num || !content){
+		return;
+	}
+	var str = '<form class="am-form"><div class="am-g am-margin-top-sm" id="option'+num+'"><div class="am-u-sm-2 am-text-right">'+num+'</div> <div class="am-u-sm-4 am-u-end" style="width:270px"><input type="text"class="am-input-sm" name="content" rel = "'+num+'" value="'+content+'"></div><div class="am-u-sm-6"><button class="am-btn am-btn-default am-btn-xs am-text-danger" type="button" onclick="myremove('+num+');"><span class="am-icon-trash-o"></span> 删除</button></div> </div></form>';
+	$("#tab4").append(str);
+}
+function myremove(num){
+	$("#option"+num).remove();
+}
+function submit(){
+	var option = "";
+	$("input[name='content']").each(function(){
+		var content = $(this).val();
+		var num = $(this).attr("rel");
+		option = option + num +":" +content +";";
+	});
+	$("#option_list").val(option);
+        $("#my_form").submit();
+}
+</script>
+</body>
+</html>

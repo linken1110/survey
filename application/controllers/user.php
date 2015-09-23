@@ -61,6 +61,10 @@ class User extends MY_Controller{
 			}
             	echo json_encode($data);
 	}
+	public function logout(){
+		$this->session->unset_userdata('user_info');
+		redirect('/login/', 'refresh');
+	}
 	public function login(){
 		$data = array('code'=>0,'user_id'=>'','message'=>'','token'=>'');
 		$login_name = $this->input->get_post('login_name');

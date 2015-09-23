@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze后台管理系统模板HTML首页 - 源码之家</title>
+<title>调查问卷后台管理系统</title>
   <meta name="description" content="这是一个 index 页面">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -40,8 +40,9 @@
 
     <div class="am-tabs-bd">
       <div class="am-tab-panel am-fade am-in am-active" id="tab1">
-        <form class="am-form" action="/project/update" id="my_form" method="post">
+        <form class="am-form" action="/project/update_category" id="my_form" method="post">
 		<input type="hidden" value="<?php echo $info['id']?>" name="id" />
+		<input type="hidden" name="category_list" value="1111" id="category">
                 <div class="am-g am-margin-top">
             <div class="am-u-sm-2 am-text-right">
               项目名称
@@ -143,15 +144,17 @@
 <!--<![endif]-->
 </body>
 <script type="text/javascript">
-var arr = new Array(0,0,0,0);
+var arr = new Array('0','0','0','0');
         <?php foreach ($list as $item):?>
-                arr[<?php echo $item -1?>] = 1;       
+                arr[<?php echo $item -1?>] = '1';       
         <?php endforeach;?>
 function submit(){
+	var a = arr[0] + arr[1]+arr[2] +arr[3];
+	$("#category").val(a);
 	$("#my_form").submit();
 }
 function change(i){
-	arr[i] = (arr[i] == 1)? 0:1;
+	arr[i] = (arr[i] == 1)? '0':'1';
 }
 $(function(){
 	var chkData = "<?php echo $info['province']?>";

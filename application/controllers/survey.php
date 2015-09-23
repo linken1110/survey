@@ -299,14 +299,18 @@ class Survey extends MY_Controller{
 	public function upload_data(){
 		$json = $this->input->get_post('parameter');
 		$result=array('status'=>0,'message'=>'');
-//	$json= '{"pid":1,"familyInfo":{"address":"测试1号","zhuhuType":"入住户","userId":"3","lat":"10.10.10.10","lng":"10.10.10.1","outEndTime":0,"questionAndAnswer":"1:-1|3:-1|4:-1|6:-1|7:-1|9:-1|10:-1|14:-1|15:-1|16:-1|17:-1|19:-1|20:-1","phoneNumber":"","outStartTime":0,"createTime":1441028808319,"id":19},"peopleList":[{"outList":[{"aboardAddress":"","debusAddress":"","userId":"3","totalPeople":"","subwayToDestUseTime":1441028808319,"subwayToDestCost":"","isWalk":"","outEndAddress":"","payOff":"","outStartAddress":"","outtype":"","outToSubwayCost":"","outToSubwayUseTime":1441028808319,"outpurpose":"","outStartTime":1441028808319,"outEndTime":1441028808319,"endLat":0.0,"startLat":0.0,"startLng":0.0,"endLng":0.0,"house_id":15,"id":24,"people_id":23}],"peopleInfo":{"userId":"3","questionAndAnswer":"12:-1|21:-1|23:-1|24:-1|25:-1|26:-1","createTime":1441028810530,"isPost":0,"houseId":15,"id":23}}]}';
 		$data = json_decode($json,true);
 		$familyInfo =  $data['familyInfo'];
 		$pid = $data['pid'];
 		if(!empty($familyInfo)){
 			$home_info = $this->home_info_model->get_by_id($familyInfo['userId'],$familyInfo['id']);
 			if(empty($home_info)){
-				$home_id = $this->home_info_model->insert(array('address'=>$familyInfo['address'],'lat'=>$familyInfo['lat'],'lng'=>$familyInfo['lng'],'type'=>$familyInfo['zhuhuType'],'phone'=>$familyInfo['phoneNumber'],'user_id'=>$familyInfo['userId'],'create_date'=>date('Y-m-d H:i:s',$familyInfo['createTime']),'home_id'=>$familyInfo['id'],'project_id'=>$pid));
+				$home_num = $this->home_info_model->get_home_num($familyInfo['userId']);
+				$newId= sprintf('%03s', $pid);
+                		$newUid= sprintf('%04s', $familyInfo['userId']);
+                		$newNum= sprintf('%03s', $home_num['num']+1 );
+                		$num = $newId.$newUid.$newNum."00";
+				$home_id = $this->home_info_model->insert(array('address'=>$familyInfo['address'],'lat'=>$familyInfo['lat'],'lng'=>$familyInfo['lng'],'type'=>$familyInfo['zhuhuType'],'phone'=>$familyInfo['phoneNumber'],'user_id'=>$familyInfo['userId'],'create_date'=>date('Y-m-d H:i:s',($familyInfo['createTime']/1000)),'home_id'=>$familyInfo['id'],'project_id'=>$pid,'identifier'=>$num));
 				$arrs = explode('|',$familyInfo['questionAndAnswer']);
 				if(!empty($arrs)){
 					foreach($arrs as $arr){
@@ -321,8 +325,11 @@ class Survey extends MY_Controller{
 				$people_list = $data['peopleList'];
 				if(!empty($people_list)){
 					foreach($people_list as $people){
+						$user_num = $this->user_info_model->get_user_num($home_id);
+						$new_num = sprintf('%02s', $user_num['num']+1 );
+						$num = $newId.$newUid.$newNum.$new_num;
 						$people_info = $people['peopleInfo'];
-						$people_id = $this->user_info_model->insert(array('home_id'=>$home_id,'people_id'=>$people_info['id']));
+						$people_id = $this->user_info_model->insert(array('home_id'=>$home_id,'people_id'=>$people_info['id'],'identifier'=>$num));
 						$arrs = explode('|',$people_info['questionAndAnswer']);
 						if(!empty($arrs)){
                                         		foreach($arrs as $arr){
@@ -337,7 +344,7 @@ class Survey extends MY_Controller{
 						$outlist = $people['outList'];
 						if(!empty($outlist)){
 							foreach($outlist as $out){
-								$this->trip_info_model->insert(array('user_id'=>$people_id,'purpose'=>$out['outpurpose'],'people_num'=>$out['totalPeople'],'start_time'=>date('Y-m-d H:i:s',$out['outStartTime']),'end_time'=>date('Y-m-d H:i:s',$out['outEndTime']),'start_address'=>$out['outStartAddress'],'end_address'=>$out['outEndAddress'],'start_lng'=>$out['startLng'],'start_lat'=>$out['startLat'],'end_lng'=>$out['startLng'],'start_lat'=>$out['startLat'],'iswalk'=>$out['isWalk'],'outway'=>$out['outtype'],'pay_off'=>$out['payOff'],'start_station'=>$out['aboardAddress'],'end_station'=>$out['debusAddress'],'to_subway_time'=>$out['outToSubwayUseTime'],'to_dest_time'=>$out['subwayToDestUseTime'],'to_subway_cost'=>$out['outToSubwayCost'],'to_dest_cost'=>$out['subwayToDestCost'],'start_address_type'=>$out['land_usage1'],'end_address_type'=>$out['land_usage2']));
+								$this->trip_info_model->insert(array('user_id'=>$people_id,'purpose'=>$out['outpurpose'],'people_num'=>$out['totalPeople'],'start_time'=>date('Y-m-d H:i:s',($out['outStartTime']/1000)),'end_time'=>date('Y-m-d H:i:s',($out['outEndTime']/1000)),'start_address'=>$out['outStartAddress'],'end_address'=>$out['outEndAddress'],'start_lng'=>$out['startLng'],'start_lat'=>$out['startLat'],'end_lng'=>$out['endLng'],'end_lat'=>$out['endLat'],'iswalk'=>$out['isWalk'],'outway'=>$out['outtype'],'pay_off'=>$out['payOff'],'start_station'=>$out['aboardAddress'],'end_station'=>$out['debusAddress'],'to_subway_time'=>$out['outToSubwayUseTime'],'to_dest_time'=>$out['subwayToDestUseTime'],'to_subway_cost'=>$out['outToSubwayCost'],'to_dest_cost'=>$out['subwayToDestCost'],'start_address_type'=>$out['land_usage1'],'end_address_type'=>$out['land_usage2'],'project_id'=>$pid));
 							}
 						}
 						
