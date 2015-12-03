@@ -10,6 +10,11 @@ class Home_info_model extends CI_Model{
 		return $this->db->insert_id();
 
 	}
+	public function get($id){
+		$this->db->where('id',$id);
+                $query = $this->db->get($this->tab_name);
+                return $query->row_array();
+	}
 	public function update($id,$array){
 		$this->db->where('id',$id);
 		$this->db->update($this->tab_name,$array);
@@ -18,9 +23,14 @@ class Home_info_model extends CI_Model{
 		}
 		return false;
 	}
-	public function get_by_id($uid,$home_id){
+	public function get_by_pid($pid){
+		$this->db->where('project_id',$pid);
+                $query = $this->db->get($this->tab_name);
+                return $query->result_array();
+	}
+	public function get_by_id($uid,$time){
 		$this->db->where('user_id',$uid);
-		$this->db->where('home_id',$home_id);
+		$this->db->where('timestamp',$time);
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
@@ -37,7 +47,17 @@ class Home_info_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
                 return $query->row_array();
 	}
-
+	public function get_by_condition($param){
+                foreach($param as $key=>$val){
+                        $this->db->where($key,$val);
+                }
+                $query = $this->db->get($this->tab_name);
+                return $query->result_array();
+        }
+	public function delete_by_id($id){
+                $this->db->where('id',$id);
+                $this->db->delete($this->tab_name);
+        }
 }
 
 ?>

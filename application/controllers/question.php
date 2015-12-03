@@ -209,11 +209,15 @@ class Question extends MY_Controller {
                                 $result[] = $this->category_model->get_by_id(4);
                         }
                 }
+/*
                 $data['user'] = $this->user_info;
 
                 $data['list'] = $result;
                 $data['pid'] = $pid;
                 $this->load->view('category_list',$data);
+*/
+		$data['result'] = 1;
+		echo json_encode($data);
 	}
 	private function update_trip_question($options,$id,$type){
 		$option_list = $this->trip_question_option_model->get_by_type($id,$type);

@@ -26,9 +26,18 @@ class User_info_model extends CI_Model{
 	public function get_by_home_id($id){
 		$this->db->where('home_id',$id);
                 $query = $this->db->get($this->tab_name);
+                return $query->result_array();
+	}
+	public function get_user_num($home_id){
+		$this->db->select("count(*) as num");
+                $this->db->where('home_id',$home_id);
+                $query = $this->db->get($this->tab_name);
                 return $query->row_array();
 	}
-
+	public function delete_by_home_id($id){
+		$this->db->where('home_id',$id);
+                $this->db->delete($this->tab_name);
+	}
 }
 
 ?>

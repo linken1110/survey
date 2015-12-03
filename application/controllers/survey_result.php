@@ -20,6 +20,7 @@ class Survey_result extends MY_Controller {
 		$this->need_login = true;
         	parent::__construct();
 		$this->load->model('project_model');
+		$this->load->model('account_model');
 		$this->load->model('category_model');
 		$this->load->model('project_category_model');
 		$this->load->model('home_info_model');
@@ -54,13 +55,14 @@ class Survey_result extends MY_Controller {
 	}
 	public function home_list(){
 		$pid = $this->input->get_post('pid');
-		$uid = $this->input->get_post('uid');
+		$uname = $this->input->get_post('uname');
 		$date = $this->input->get_post('date');
+		$user = $this->account_model->get_user_by_nickname($uname);
 		$param1 = array('project_id'=>$pid);
                 $param2 = array();
                 $param = array();
-                if(!empty($uid)){
-                        $param1=array_merge($param1,array('user_id'=> $uid));
+                if(!empty($user)){
+                        $param1=array_merge($param1,array('user_id'=> $user['id']));
                 }if(!empty($date)){
                         $param2=array('date(create_date)'=>date($date));
                 }
@@ -69,6 +71,7 @@ class Survey_result extends MY_Controller {
 		$data['user'] = $this->user_info;
 		$data['result'] = 1;
 		$data['list'] = $result ;
+		$data['count'] = count($result);
 	//	echo json_encode($data);
 		$this->load->view('home_list',$data);
 	}
@@ -302,9 +305,21 @@ class Survey_result extends MY_Controller {
 		$pid = $this->input->get_post('pid');
                 $data['user'] = $this->user_info;
 		$list = array();
+		$list1 = array();
                 $question_list = $this->get_question_list($pid,2);
                 if(!empty($question_list)){
                         foreach($question_list as $question){
+                                $answer = $this->answer_model->get_by_condition(array('number'=>$question['number'],'user_id'=>$id));
+                                $question['answer'] = 0;
+                                if(!empty($answer)){
+                                        $question['answer'] = $answer[0]['result'];
+                                }
+                                $list[] = $question;
+                        }
+                }
+		$question_list1 = $this->get_question_list($pid,3);
+		if(!empty($question_list1)){
+                        foreach($question_list1 as $question){
                                 $answer = $this->answer_model->get_by_condition(array('number'=>$question['number'],'user_id'=>$id));
                                 $question['answer'] = 0;
                                 if(!empty($answer)){

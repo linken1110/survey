@@ -21,6 +21,7 @@ class Main extends MY_Controller {
         	parent::__construct();
 		$this->load->model('project_model');
 		$this->load->model('home_info_model');
+		$this->load->model('user_info_model');
 		$this->load->model('trip_info_model');
 		$this->load->model('user_info_model');
 		$this->load->model('trip_question_option_model');
@@ -67,7 +68,32 @@ class Main extends MY_Controller {
 		$data['options1'] = $this->trip_question_option_model->get_by_type($trip_info['project_id'],1);
                 $data['options2'] = $this->trip_question_option_model->get_by_type($trip_info['project_id'],2);
                 $data['options3'] = $this->trip_question_option_model->get_by_type($trip_info['project_id'],3);
+		if(!empty ($trip_info)){
+				$user_info = $this->user_info_model->get_user_by_uid($trip_info['user_id']);
+                                        $home_info = $this->home_info_model->get($user_info['home_id']);
+				if($trip_info['start_type'] == 1){
+					$trip_info['start_lng'] = $home_info['lng'];
+					$trip_info['start_lat'] = $home_info['lat'];
+				}else if($trip_info['start_type'] == 2){
+                                        $trip_info['start_lng'] = $user_info['lng'];
+                                        $trip_info['start_lat'] = $user_info['lat'];
+                                }
+				if($trip_info['end_type'] == 1){
+                                        $trip_info['end_lng'] = $home_info['lng'];
+                                        $trip_info['end_lat'] = $home_info['lat'];
+                                }else if($trip_info['end_type'] == 2){
+                                        $trip_info['end_lng'] = $user_info['lng'];
+                                        $trip_info['end_lat'] = $user_info['lat'];
+				}
+				
+		}
 		$data['trip_info'] = $trip_info;
+		if(!empty ($trip_info['outway'])){
+			$outways = json_encode(explode(',',$trip_info['outway']));
+		}else{
+			$outways = "";
+		}
+		$data['outways'] = $outways ;
 		$data['id'] = $id;
 		$data['uid'] = $trip_info['user_id'];
 		$this->load->view('map_edit_trip',$data);

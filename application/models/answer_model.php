@@ -10,13 +10,26 @@ class Answer_model extends CI_Model{
 		return $this->db->insert_id();
 
 	}
-	public function update($id,$array){
-		$this->db->where('id',$id);
-		$this->db->update($this->tab_name,$array);
+	public function update($uid,$number,$result){
+		$this->db->where('user_id',$uid);
+		$this->db->where('number',$number);
+		$this->db->set('result',$result);
+		$this->db->update($this->tab_name);
 		if($this->db->affected_rows() >0 ){
 			return true;
 		}
 		return false;
+	}
+	public function update_result($array,$result){
+		$this->db->set('result',$result);
+		foreach($array as $key=>$val){
+                        $this->db->where($key,$val);
+                }
+		$this->db->update($this->tab_name);
+		if($this->db->affected_rows() >0 ){
+                        return true;
+                }
+                return false;
 	}
 	public function get_by_id($uid,$home_id){
 		$this->db->where('user_id',$uid);
@@ -37,7 +50,21 @@ class Answer_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
                 return $query->row_array();
 	}
-
+	public function get_by_condition($param){
+                foreach($param as $key=>$val){
+                        $this->db->where($key,$val);
+                }
+                $query = $this->db->get($this->tab_name);
+                return $query->result_array();
+        }
+	public function delete_by_home_id($id){
+                $this->db->where('home_id',$id);
+                $this->db->delete($this->tab_name);
+        }
+	public function delete_by_uid($id){
+		$this->db->where('user_id',$id);
+                $this->db->delete($this->tab_name);
+	}
 }
 
 ?>

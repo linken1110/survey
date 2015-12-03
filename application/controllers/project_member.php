@@ -78,11 +78,34 @@ class Project_member extends MY_Controller {
                 $this->load->view('project_list',$data);
 
 	}
+	public function auto_add(){
+		$id = $this->input->get_post('id');
+		$position = $this->input->get_post('position');
+		$from = $this->input->get_post('from');
+		$to = $this->input->get_post('to');
+		for($i = $from; $i<=$to;$i++){
+			$name = sprintf("%04d", $i);
+			$user = $this->account_model->get_user_by_nickname($name);
+                	if(!empty($user)){continue;}
+			$param = array(
+                                                                'create_date'=>date("Y-m-d H:i:s" ,time() ) ,
+                                                                'name'=>$name,
+                                                           'pass'=>sha1($name));
+                                $uid = $this->account_model->insert($param);
+                	if($uid >0){
+                        $param = array('project_id'=>$id,
+                                'uid'=>$uid,
+                                'position'=>$position,
+                                );
+                        $this->project_member_model->insert($param);
+                	}
+		}
+	}
 	public function add(){
-		$id = $this->input->post('id');
-                $name = $this->input->post('name');
-                $pass = $this->input->post('pass');
-                $position = $this->input->post('position');
+		$id = $this->input->get_post('id');
+                $name = $this->input->get_post('name');
+                $pass = $this->input->get_post('pass');
+                $position = $this->input->get_post('position');
 		$data['user'] = $this->user_info;
 		if(!$name || !$pass){
 			$data['message'] = '用户名和密码不能为空';

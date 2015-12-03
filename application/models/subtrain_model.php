@@ -38,7 +38,10 @@ class Subtrain_model extends CI_Model{
 		$query = $this->db->get($this->tab_name);
 		return $query->row_array();
 	}
-
+	public function delete_by_id($id){
+		$this->db->where('id',$id);
+		$query = $this->db->delete($this->tab_name);
+	}
 
 }
 

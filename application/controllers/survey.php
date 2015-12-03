@@ -3,6 +3,7 @@
 class Survey extends MY_Controller{
 		public function __construct(){
 			parent::__construct();
+			$this->load->model('account_model');
             		$this->load->model('project_model');
 			$this->load->model('project_category_model');
 			$this->load->model('question_model');
@@ -18,6 +19,8 @@ class Survey extends MY_Controller{
 			$this->load->model('answer_model');
 			$this->load->model('user_info_model');
 			$this->load->model('trip_info_model');
+			$this->load->model('address_info_model');
+			$this->load->model('community_info_model');
 		}
 		public function quest_group(){
 			$data = array('code'=>1,'message'=>'ok');
@@ -128,6 +131,8 @@ class Survey extends MY_Controller{
 				$data['option_list'] = $this->question_option_model->get_by_questionid($question_id);
 				$data['is_parent']  = ($question['type'] == 0)?1:0;
 				$data['default']  = $question['default_value'];
+				$data['count'] = $question['count'];
+				$data['is_nessary'] = $question['is_nessary'];
 				$data['sub_question'] = $this->get_subquestion($question_id);
 			}
 			return $data;
@@ -222,6 +227,31 @@ class Survey extends MY_Controller{
 		$data['message'] = 'login failed';
 		echo json_encode($data);
 	}
+	public function login_web(){
+                $data = array('code'=>0,'user_id'=>'','message'=>'','token'=>'');
+                $login_name = $this->input->get_post('login_name');
+                $password = $this->input->get_post('password');
+                if(!$login_name || !$password){
+                        $data['code'] = 4001;
+                        $data['message'] = 'error parameters';
+                        echo json_encode($data);
+                        return;
+                }
+                //step1:check uid
+                $user = $this->account_model->get_user_by_nickname($login_name);
+                if(!empty($user) ||  ($user['id'] >= 361 && $user['id']<= 750)){
+                        if(sha1($password) == $user['pass']){
+                                $data['user_id'] = $user['id'];
+                                $data['code'] = 1;
+                                $data['message'] = 'success';
+                                echo json_encode($data);
+                                return;
+                        }
+                }
+                $data['code'] = 4002;
+                $data['message'] = 'login failed';
+                echo json_encode($data);
+        }
 	public function update_nickname(){
 		$data = array('code'=>0,'message'=>'');
 		$os_type = $this->input->get_post('os_type');
@@ -303,22 +333,28 @@ class Survey extends MY_Controller{
 		$familyInfo =  $data['familyInfo'];
 		$pid = $data['pid'];
 		if(!empty($familyInfo)){
-			$home_info = $this->home_info_model->get_by_id($familyInfo['userId'],$familyInfo['id']);
+			$home_info = $this->home_info_model->get_by_id($familyInfo['userId'],$familyInfo['createTime']);
+			$account = $this->account_model->get_user_by_uid($familyInfo['userId']);
 			if(empty($home_info)){
 				$home_num = $this->home_info_model->get_home_num($familyInfo['userId']);
 				$newId= sprintf('%03s', $pid);
-                		$newUid= sprintf('%04s', $familyInfo['userId']);
+				if(isset ($account['name'])){
+                			$newUid= sprintf('%04s', $account['name']);
+				}
+				$familyInfo['detailAddress'] = str_replace(array("\n","\r"),"",$familyInfo['detailAddress']);
                 		$newNum= sprintf('%03s', $home_num['num']+1 );
                 		$num = $newId.$newUid.$newNum."00";
-				$home_id = $this->home_info_model->insert(array('address'=>$familyInfo['address'],'lat'=>$familyInfo['lat'],'lng'=>$familyInfo['lng'],'type'=>$familyInfo['zhuhuType'],'phone'=>$familyInfo['phoneNumber'],'user_id'=>$familyInfo['userId'],'create_date'=>date('Y-m-d H:i:s',($familyInfo['createTime']/1000)),'home_id'=>$familyInfo['id'],'project_id'=>$pid,'identifier'=>$num));
-				$arrs = explode('|',$familyInfo['questionAndAnswer']);
-				if(!empty($arrs)){
-					foreach($arrs as $arr){
-						$key_values = explode(':',$arr);
-						if(!empty($key_values)){
-							$question = $key_values[0];
-							$answer = $key_values[1];
-							$this->answer_model->insert(array('home_id'=>$home_id,'number'=>$question,'result'=>$answer));
+				$home_id = $this->home_info_model->insert(array('address'=>$familyInfo['mapAddress'],'lat'=>$familyInfo['lat'],'lng'=>$familyInfo['lng'],'type'=>$familyInfo['zhuhuType'],'phone'=>$familyInfo['phoneNumber'],'user_id'=>$familyInfo['userId'],'create_date'=>date('Y-m-d H:i:s',($familyInfo['createTime']/1000)),'home_id'=>$familyInfo['id'],'project_id'=>$pid,'identifier'=>$num,'timestamp'=>$familyInfo['createTime'],'district'=>$familyInfo['district'],'street'=>$familyInfo['street'],'community'=>$familyInfo['community'],'detail_address'=>$familyInfo['detailAddress'],'start_time'=>date('Y-m-d H:i:s',$familyInfo['outStartTime']/1000),'end_time'=>date('Y-m-d H:i:s',$familyInfo['endSurveyTime']/1000),'number'=>$familyInfo['id']));
+				if(isset($familyInfo['questionAndAnswer'])){
+					$arrs = explode('|',$familyInfo['questionAndAnswer']);
+					if(!empty($arrs)){
+						foreach($arrs as $arr){
+							$key_values = explode(':',$arr);
+							if(!empty($key_values)){
+								$question = $key_values[0];
+								$answer = $key_values[1];
+								$this->answer_model->insert(array('home_id'=>$home_id,'number'=>$question,'result'=>$answer));
+							}
 						}
 					}
 				}
@@ -329,7 +365,7 @@ class Survey extends MY_Controller{
 						$new_num = sprintf('%02s', $user_num['num']+1 );
 						$num = $newId.$newUid.$newNum.$new_num;
 						$people_info = $people['peopleInfo'];
-						$people_id = $this->user_info_model->insert(array('home_id'=>$home_id,'people_id'=>$people_info['id'],'identifier'=>$num));
+						$people_id = $this->user_info_model->insert(array('home_id'=>$home_id,'people_id'=>$people_info['id'],'identifier'=>$num,'address'=>$people_info['jobMapAddress'],'detail_address'=>$people_info['jobDetialAddress'],'district'=>$people_info['jobDistict'],'lat'=>$people_info['jobMapX'],'lng'=>$people_info['jobMapY']));
 						$arrs = explode('|',$people_info['questionAndAnswer']);
 						if(!empty($arrs)){
                                         		foreach($arrs as $arr){
@@ -341,10 +377,23 @@ class Survey extends MY_Controller{
                                                 		}
                                         		}
                                 		}
+						if(isset ($people['otherOutInfo'])){
+						$arrs1 = explode('|',$people['otherOutInfo']['questionAndAnswer']);
+						if(!empty($arrs1)){
+                                                        foreach($arrs1 as $arr){
+                                                                $key_values = explode(':',$arr);
+                                                                if(!empty($key_values)){
+                                                                        $question = $key_values[0];
+                                                                        $answer = $key_values[1];
+                                                                        $this->answer_model->insert(array('home_id'=>$home_id,'number'=>$question,'result'=>$answer,'user_id'=>$people_id));
+                                                                }
+                                                        }
+                                                }
+						}
 						$outlist = $people['outList'];
 						if(!empty($outlist)){
 							foreach($outlist as $out){
-								$this->trip_info_model->insert(array('user_id'=>$people_id,'purpose'=>$out['outpurpose'],'people_num'=>$out['totalPeople'],'start_time'=>date('Y-m-d H:i:s',($out['outStartTime']/1000)),'end_time'=>date('Y-m-d H:i:s',($out['outEndTime']/1000)),'start_address'=>$out['outStartAddress'],'end_address'=>$out['outEndAddress'],'start_lng'=>$out['startLng'],'start_lat'=>$out['startLat'],'end_lng'=>$out['endLng'],'end_lat'=>$out['endLat'],'iswalk'=>$out['isWalk'],'outway'=>$out['outtype'],'pay_off'=>$out['payOff'],'start_station'=>$out['aboardAddress'],'end_station'=>$out['debusAddress'],'to_subway_time'=>$out['outToSubwayUseTime'],'to_dest_time'=>$out['subwayToDestUseTime'],'to_subway_cost'=>$out['outToSubwayCost'],'to_dest_cost'=>$out['subwayToDestCost'],'start_address_type'=>$out['land_usage1'],'end_address_type'=>$out['land_usage2'],'project_id'=>$pid));
+								$this->trip_info_model->insert(array('user_id'=>$people_id,'purpose'=>$out['outpurpose'],'people_num'=>$out['totalPeople'],'start_time'=>date('Y-m-d H:i:s',($out['outStartTime']/1000)),'end_time'=>date('Y-m-d H:i:s',($out['outEndTime']/1000)),'start_address'=>$out['outStartMapAddress'],'end_address'=>$out['outEndMapAddress'],'start_lng'=>$out['startLng'],'start_lat'=>$out['startLat'],'end_lng'=>$out['endLng'],'end_lat'=>$out['endLat'],'iswalk'=>$out['isWalk'],'outway'=>$out['outtype'],'pay_off'=>$out['payOff'],'start_station'=>$out['aboardAddress'],'end_station'=>$out['debusAddress'],'to_subway_time'=>$out['outToSubwayUseTime'],'to_dest_time'=>$out['subwayToDestUseTime'],'to_subway_cost'=>$out['outToSubwayCost'],'to_dest_cost'=>$out['subwayToDestCost'],'start_address_type'=>$out['land_usage1'],'end_address_type'=>$out['land_usage2'],'project_id'=>$pid,'start_province'=>$out['outStartOtherProvince'],'start_city'=>$out['outStartOtherCity'],'start_distict'=>$out['outStartOtherDistict'],'start_type'=>$out['outStartAddressType'],'end_province'=>$out['outEndOtherProvince'],'end_city'=>$out['outEndOtherCity'],'end_distict'=>$out['outEndOtherDistict'],'end_type'=>$out['outEndAddressType'],'start_other'=>$out['outStartOtherOtherData'],'end_other'=>$out['outEndOtherOtherData'],'bus_time'=>$out['aboardDebusUseTime'],'bus_cost'=>$out['aboardDebusCost']));
 							}
 						}
 						
@@ -379,5 +428,53 @@ class Survey extends MY_Controller{
 		echo json_encode($data);
 		
 	}
+	public function get_address_list(){
+		$data= array();
+		$province_list = array();
+		$province = $this->address_info_model->get_province_list();
+		if(!empty($province)){
+			foreach($province as $pdata){
+				$city_list = $this->address_info_model->get_city_list_by_province($pdata['province']);
+				if(!empty($city_list)){
+					foreach($city_list as $cdata){
+						$county_list = $this->address_info_model->get_county_list_by_city($cdata['city']);
+						if(!empty($county_list)){
+							foreach($county_list as $county){
+								$cdata['county_list'][] = $county['county'];
+							}
+						}
+						$pdata['city_list'][] = $cdata;
+					}
+				}
+				$province_list[] = $pdata;
+			}	
+		}
+		$data['province_list'] = $province_list;
+		echo json_encode($data, JSON_UNESCAPED_UNICODE);
+	}
+	public function get_community_list(){
+                $data= array();
+                $province_list = array();
+                $province = $this->community_info_model->get_district_list();
+                if(!empty($province)){
+                        foreach($province as $pdata){
+                                $city_list = $this->community_info_model->get_street_list_by_district($pdata['district']);
+                                if(!empty($city_list)){
+                                        foreach($city_list as $cdata){
+                                                $county_list = $this->community_info_model->get_community_list_by_street($cdata['street']);
+                                                if(!empty($county_list)){
+                                                        foreach($county_list as $county){
+                                                                $cdata['community_list'][] = $county['community'];
+                                                        }
+                                                }
+                                                $pdata['street_list'][] = $cdata;
+                                        }
+                                }
+                                $province_list[] = $pdata;
+                        }       
+                }
+                $data['district_list'] = $province_list;
+                echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        }
 }
 ?>

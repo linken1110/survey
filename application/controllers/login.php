@@ -34,6 +34,50 @@ class Login extends MY_Controller{
 		$this->load->view('login',$data);
                         return;
 	}
+	 public function do_login_web(){
+                $data =array();
+                $login_name = $this->input->get_post('name');
+                $password = $this->input->get_post('password');
+                if(!$login_name || !$password){
+                        $data['code'] = 4001;
+                        $data['message'] = 'error parameters';
+                        $this->load->view('login',$data);
+                        return;
+                }
+                //step1:check uid
+                $user = $this->account_model->get_user_by_nickname($login_name);
+                if(!empty($user) &&  $user['is_web']){
+                        if(sha1($password) == $user['pass']){
+                                $this->session->set_userdata('user_info',$user);
+                                redirect('/survey_result/home_page', 'refresh');
+                                return;
+                        }
+                }
+                $data['code'] = 4002;
+                $data['message'] = 'login failed';
+                $this->load->view('login',$data);
+                        return;
+        }
+	public function update_password(){
+		$data =array();
+                $login_name = $this->input->get_post('name');
+                $password = $this->input->get_post('password');
+                if(!$login_name || !$password){
+                        $data['code'] = 4001;
+                        $data['message'] = 'error parameters';
+                        $this->load->view('login',$data);
+                        return;
+                }
+                //step1:check uid
+                $user = $this->account_model->get_user_by_nickname($login_name);
+                if(!empty($user)){
+			$this->account_model->update($user['id'],array('pass'=>sha1($password)));
+			$data['code'] = 0;
+                	$data['message'] = 'ok';
+                }
+                $data['code'] = 4002;
+                $data['message'] = 'login failed';
+	}
 	public function update_nickname(){
 		$data = array('code'=>0,'message'=>'');
 		$os_type = $this->input->get_post('os_type');

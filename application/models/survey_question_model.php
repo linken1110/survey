@@ -19,7 +19,7 @@ class Survey_question_model extends CI_Model{
 		return $query->row_array();
 	}
 	public function update($id,$array){
-		$this->db->where('id',$id);
+		$this->db->where('question_id',$id);
 		$this->db->update($this->tab_name,$array);
 		if($this->db->affected_rows() >0 ){
 			return true;
@@ -53,6 +53,10 @@ class Survey_question_model extends CI_Model{
 	public function delete_by_question_id($id){
                 $this->db->where('question_id',$id);
                 $this->db->delete($this->tab_name);
+		if($this->db->affected_rows() >0 ){
+                        return true;
+                }
+                return false;
         }
 
 }

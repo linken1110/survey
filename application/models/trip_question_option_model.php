@@ -47,6 +47,7 @@ class Trip_question_option_model extends CI_Model{
 		$this->db->select('number,content');
 		$this->db->where('id',$id);
 		$this->db->where('type',$type);
+		$this->db->order_by('number');
 		$query = $this->db->get($this->tab_name);
                 return $query->result_array();
 	}
